@@ -1,5 +1,7 @@
 package com.google.atap.jmotiontrackingsample_v2;
 
+import java.text.DecimalFormat;
+
 import com.google.atap.tangoservice.Tango;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.google.atap.tangoservice.TangoXyzIjData;
@@ -37,7 +39,8 @@ public class MotionTracking extends Activity {
        poseQuaternion2 = (TextView) findViewById(R.id.Quaternion3);
        poseQuaternion3 = (TextView) findViewById(R.id.Quaternion4); 
        mGLView = (GLSurfaceView) findViewById(R.id.gl_surface_view); 
-      
+       
+       
        mRenderer = new MTGLRenderer();
        mGLView.setEGLContextClientVersion(2);
        mGLView.setRenderer(mRenderer);
@@ -48,7 +51,8 @@ public class MotionTracking extends Activity {
        }
 
 	public void poseUpdater(){
-		mTango.connectListener(new OnTangoUpdateListener() {     
+		mTango.connectListener(new OnTangoUpdateListener() { 
+			final DecimalFormat fourDec = new DecimalFormat("0.0000");
 			@Override 
 			public void onPoseAvailable(final TangoPoseData pose) {
 				mRenderer.cameraFrustrum.updateModelMatrix(pose.translation, pose.rotation);  
@@ -56,13 +60,13 @@ public class MotionTracking extends Activity {
 				runOnUiThread(new Runnable(){  
 					@Override      
 					public void run() {        
-						poseX.setText("PosX: " +pose.translation[0] + "");      
-						poseY.setText("PosY: " +pose.translation[1] + "");       
-						poseZ.setText("PosZ: " +pose.translation[2] + "");       
-						poseQuaternion0.setText("Q1: " +pose.rotation[0] + "");      
-						poseQuaternion1.setText("Q2: " +pose.rotation[1] + "");       
-						poseQuaternion2.setText("Q3: " +pose.rotation[2] + "");       
-						poseQuaternion3.setText("Q4: " +pose.rotation[3] + "");	                           
+						poseX.setText("PosX: " +fourDec.format(pose.translation[0]));      
+						poseY.setText("PosY: " +fourDec.format(pose.translation[1]));       
+						poseZ.setText("PosZ: " +fourDec.format(pose.translation[2]));       
+						poseQuaternion0.setText("Q1: " +fourDec.format(pose.rotation[0]));      
+						poseQuaternion1.setText("Q2: " +fourDec.format(pose.rotation[1]));       
+						poseQuaternion2.setText("Q3: " +fourDec.format(pose.rotation[2]));       
+						poseQuaternion3.setText("Q4: " +fourDec.format(pose.rotation[3]));                             
 	                    //timestamp.setText(pose.timestamp + "");   
 					}      
 				});    

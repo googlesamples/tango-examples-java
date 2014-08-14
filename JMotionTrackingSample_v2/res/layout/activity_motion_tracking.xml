@@ -7,8 +7,10 @@
 
     <LinearLayout
         android:id="@+id/LinearLayout1"
-        android:layout_width="318dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:gravity="left"
         android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -18,7 +20,7 @@
 
         <TextView
             android:id="@+id/Quaternion1"
-            android:layout_width="159dp"
+            android:layout_width="104dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="51dp"
             android:layout_marginTop="18dp"
@@ -26,7 +28,7 @@
 
         <TextView
             android:id="@+id/Quaternion2"
-            android:layout_width="159dp"
+            android:layout_width="106dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="51dp"
             android:layout_marginTop="18dp"
@@ -34,7 +36,7 @@
 
         <TextView
             android:id="@+id/Quaternion3"
-            android:layout_width="159dp"
+            android:layout_width="109dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="51dp"
             android:layout_marginTop="18dp"
@@ -42,7 +44,7 @@
 
         <TextView
             android:id="@+id/Quaternion4"
-            android:layout_width="159dp"
+            android:layout_width="104dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="51dp"
             android:layout_marginTop="18dp"
@@ -50,7 +52,7 @@
 
         <TextView
             android:id="@+id/PosX"
-            android:layout_width="159dp"
+            android:layout_width="102dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="51dp"
             android:layout_marginTop="18dp"
@@ -58,7 +60,7 @@
 
         <TextView
             android:id="@+id/PosY"
-            android:layout_width="159dp"
+            android:layout_width="93dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="51dp"
             android:layout_marginTop="18dp"
@@ -66,7 +68,7 @@
 
         <TextView
             android:id="@+id/PosZ"
-            android:layout_width="159dp"
+            android:layout_width="94dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="51dp"
             android:layout_marginTop="18dp"
@@ -75,8 +77,8 @@
 
     <android.opengl.GLSurfaceView
         android:id="@+id/gl_surface_view"
-        android:layout_width="538dp"
-        android:layout_height="321dp"
+        android:layout_width="619dp"
+        android:layout_height="380dp"
         android:layout_column="1"
         android:layout_gravity="left|center_vertical"
         android:layout_row="0" />
