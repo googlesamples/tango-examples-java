@@ -15,23 +15,20 @@ public class CameraFrustrum {
 
 	private FloatBuffer mVertexBuffer, mColorBuffer;
 	private final String vertexShaderCode =
-	// This matrix member variable provides a hook to manipulate
-	// the coordinates of the objects that use this vertex shader
-	"uniform mat4 uMVPMatrix;"
+			"uniform mat4 uMVPMatrix;"
 			+ "attribute vec4 vPosition;"
 			+ "attribute vec4 aColor;"
 			+ "varying vec4 vColor;"
-			+ "void main() {"
-			+
-			// the matrix must be included as a modifier of gl_Position
-			// Note that the uMVPMatrix factor *must be first* in order
-			// for the matrix multiplication product to be correct.
+			+ "void main() {"+
 			"  vColor=aColor;" + "  gl_Position = uMVPMatrix * vPosition;"
 			+ "}";
 
-	private final String fragmentShaderCode = "precision mediump float;"
-			+ "varying vec4 vColor;" + "void main() {"
-			+ "  gl_FragColor = vColor;" + "}";
+	private final String fragmentShaderCode = 
+			"precision mediump float;"
+			+ "varying vec4 vColor;" 
+			+ "void main() {"
+			+ "gl_FragColor = vColor;" + 
+			"}";
 
 	private float vertices[] = { 1.5f, 0, 0, 0, 0, 0,
 
@@ -39,11 +36,14 @@ public class CameraFrustrum {
 
 	0, 0, 1.5f, 0, 0, 0 };
 
-	private float colors[] = { 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-
-	0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-
-	0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, };
+	private float colors[] = { 1.0f, 0.0f, 0.0f, 1.0f,
+			1.0f, 0.0f, 0.0f, 1.0f,
+			
+			0.0f, 1.0f, 0.0f, 1.0f,
+			0.0f, 1.0f, 0.0f, 1.0f,
+			
+			0.0f, 0.0f, 1.0f, 1.0f,
+			0.0f, 0.0f, 1.0f, 1.0f, };
 
 	private float[] modelMatrix = new float[16];
 	private float[] mvMatrix = new float[16];
