@@ -16,40 +16,39 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
 public class MTGLRenderer implements GLSurfaceView.Renderer {
-	
 	public CameraFrustrum cameraFrustrum;
 	private Grid mFloorGrid;
 	private float[] mViewMatrix = new float[16];
-    private static final float CAMERA_FOV = 45f, CAMERA_NEAR = 1f, CAMERA_FAR = 200f;
-    private static final int MATRIX_4X4 = 16;
+	private static final float CAMERA_FOV = 45f, CAMERA_NEAR = 1f, CAMERA_FAR = 200f;
+	private static final int MATRIX_4X4 = 16;
 
     // Camera settings
-    private float mCameraAspect;
-    private float[] mProjectionMatrix = new float[MATRIX_4X4];
+	private float mCameraAspect;
+	private float[] mProjectionMatrix = new float[MATRIX_4X4];
 	
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		// TODO Auto-generated method stub
-		 glClearColor(1f, 1f, 1f, 1.0f);
-	     glEnable(GL_DEPTH_TEST);
-	     cameraFrustrum = new CameraFrustrum();
-	     mFloorGrid = new Grid();
-	     Matrix.setIdentityM(mViewMatrix, 0);
-	     setLookAtM(mViewMatrix, 0, 0f, 0f, 10f, 0f, 0f, 0f, 0f, 1f, 0f);
+		glClearColor(1f, 1f, 1f, 1.0f);
+		glEnable(GL_DEPTH_TEST);
+		cameraFrustrum = new CameraFrustrum();
+		mFloorGrid = new Grid();
+		Matrix.setIdentityM(mViewMatrix, 0);
+		setLookAtM(mViewMatrix, 0, 0f, 0f, 10f, 0f, 0f, 0f, 0f, 1f, 0f);
 	}
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		// TODO Auto-generated method stub
 		glViewport(0, 0, width, height);
-        mCameraAspect = (float) width / height;
-        Matrix.perspectiveM(mProjectionMatrix, 0, CAMERA_FOV, mCameraAspect, CAMERA_NEAR, CAMERA_FAR);
+		mCameraAspect = (float) width / height;
+		Matrix.perspectiveM(mProjectionMatrix, 0, CAMERA_FOV, mCameraAspect, CAMERA_NEAR, CAMERA_FAR);
 	}
 
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		// TODO Auto-generated method stub
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT); 	
+		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT); 
 		mFloorGrid.draw(mViewMatrix, mProjectionMatrix);
 		cameraFrustrum.draw(mViewMatrix, mProjectionMatrix);
 	}
