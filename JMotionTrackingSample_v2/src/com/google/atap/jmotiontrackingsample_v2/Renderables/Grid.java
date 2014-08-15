@@ -11,12 +11,18 @@ import com.google.atap.jmotiontrackingsample_v2.MTGLRenderer;
 
 public class Grid {
 
-	private static final String vertexShaderCode = "uniform mat4 uMVPMatrix;" 
-			+"attribute vec4 vPosition;" + "void main() {" 
-			+"gl_Position = uMVPMatrix * vPosition;" + "}";
-	private static final String fragmentShaderCode = "precision mediump float;"
-			+ "uniform vec4 vColor;" + "void main() {"
-			+ "  gl_FragColor = vec4(0.8,0.8,0.8,1.0);" + "}";
+	private static final String vertexShaderCode = 
+			"uniform mat4 uMVPMatrix;" 
+			+"attribute vec4 vPosition;" 
+			+"void main() {" 
+			+"gl_Position = uMVPMatrix * vPosition;" 
+			+"}";
+	private static final String fragmentShaderCode = 
+			"precision mediump float;"
+			+ "uniform vec4 vColor;" 
+			+ "void main() {"
+			+ " gl_FragColor = vec4(0.8,0.8,0.8,1.0);" 
+			+ "}";
 
 	private static final int GRID_RANGE_M = 100;
 	private static final int BYTES_PER_FLOAT = 4;
@@ -58,9 +64,7 @@ public class Grid {
 
 	public void draw(float[] viewMatrix, float[] projectionMatrix) {
 		GLES20.glUseProgram(mProgram);
-
 		mVertexBuffer.position(0);
-
 		Matrix.setIdentityM(mvMatrix, 0);
 		Matrix.setIdentityM(mvpMatrix, 0);
 		Matrix.multiplyMM(mvMatrix, 0, viewMatrix, 0, modelMatrix, 0);
@@ -70,8 +74,10 @@ public class Grid {
 		GLES20.glVertexAttribPointer(mPosHandle, COORDS_PER_VERTEX,
 				GLES20.GL_FLOAT, false, 0, mVertexBuffer);
 		GLES20.glEnableVertexAttribArray(mPosHandle);
+		
 		mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
 		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+		
 		GLES20.glLineWidth(3);
 		GLES20.glDrawArrays(GLES20.GL_LINES, 0, (GRID_RANGE_M * 2 + 1) * 4);
 	}

@@ -20,7 +20,8 @@ public class CameraFrustrum {
 			+ "attribute vec4 aColor;"
 			+ "varying vec4 vColor;"
 			+ "void main() {"+
-			"  vColor=aColor;" + "  gl_Position = uMVPMatrix * vPosition;"
+			"  vColor=aColor;" 
+			+ "gl_Position = uMVPMatrix * vPosition;"
 			+ "}";
 
 	private final String fragmentShaderCode = 
