@@ -12,72 +12,52 @@ import android.opengl.Matrix;
 public class CameraFrustrum {
 		
 		private float[] mTranslation = new float[3];
-		private float[] mQuaternion = new float[4];
 		
-	 	private FloatBuffer mVertexBuffer;
+	 	private FloatBuffer mVertexBuffer,mColorBuffer;
 	    private final String vertexShaderCode =
 	            // This matrix member variable provides a hook to manipulate
 	            // the coordinates of the objects that use this vertex shader
 	            "uniform mat4 uMVPMatrix;" +
 	            "attribute vec4 vPosition;" +
+	            "attribute vec4 aColor;" +
+	            "varying vec4 vColor;" +
 	            "void main() {" +
 	            // the matrix must be included as a modifier of gl_Position
 	            // Note that the uMVPMatrix factor *must be first* in order
 	            // for the matrix multiplication product to be correct.
+	            "  vColor=aColor;" +
 	            "  gl_Position = uMVPMatrix * vPosition;" +
 	            "}";
 
 		 private final String fragmentShaderCode =
 		            "precision mediump float;" +
-		            "uniform vec4 vColor;" +
+		            "varying vec4 vColor;" +
 		            "void main() {" +
-		            "  gl_FragColor = vec4(0.3,0.5,0.0,1.0);" +
+		            "  gl_FragColor = vColor;" +
 		            "}";
 	    
 	        
 	    private float vertices[] = {
-	    		0.25f, -0.15f, -0.5f, // TR
-                0.0f, 0.0f, 0.0f, // S
-
-                0.25f, -0.15f, -0.5f, // TR
-                -0.25f, -0.15f, -0.5f, // TL
-
-                0.25f, -0.15f, -0.5f, // TR
-                0.25f, 0.15f, -0.5f, // BR
-
-                0.0f, 0.0f, 0.0f, // S
-                -0.25f, -0.15f, -0.5f, // TL
-
-                -0.25f, -0.15f, -0.5f, // TL
-                -0.25f, 0.15f, -0.5f, // BL
-
-                0.25f, 0.15f, -0.5f, // BR
-                -0.25f, 0.15f, -0.5f, // BL
-
-                -0.25f, 0.15f, -0.5f, // BL
-                0.0f, 0.0f, 0.0f, // S
-
-                0.0f, 0.0f, 0.0f, // S
-                0.25f, 0.15f, -0.5f, // BR
-	                                };
+	    		1.5f,0,0,
+	    		0,0,0,
+	    		
+	    		0,1.5f,0,
+	    		0,0,0,
+	    		
+	    		0,0,1.5f,
+	    		0,0,0
+	    		};
+	    
 	    private float colors[] = {
-	    		0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f,
-                0.4f, 0.4f, 0.4f, 1.0f
-	                            };   
+	    		1.0f, 0.0f, 0.0f, 1.0f,
+                1.0f, 0.0f, 0.0f, 1.0f,
+                
+            	0.0f, 1.0f, 0.0f, 1.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+                
+            	0.0f, 0.0f, 1.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+                };   
 	    
 	    private float[] modelMatrix = new float[16];
 	    private float[] mvMatrix = new float[16];
@@ -85,18 +65,27 @@ public class CameraFrustrum {
 	    
 	    
 	    private final int mProgram;
-		private int mPosHandle;
+		private int mPosHandle, mColorHandle;
 		static final int COORDS_PER_VERTEX = 3;
 		private int mMVPMatrixHandle;
 	                
 	    public CameraFrustrum() {
 	    		Matrix.setIdentityM(modelMatrix, 0);
+	    		
+	    		
 	            ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 	            byteBuf.order(ByteOrder.nativeOrder());
 	            mVertexBuffer = byteBuf.asFloatBuffer();
 	            mVertexBuffer.put(vertices);
 	            mVertexBuffer.position(0);
-	              
+	             
+	            
+	            ByteBuffer cByteBuff = ByteBuffer.allocateDirect(colors.length * 4);
+	            cByteBuff.order(ByteOrder.nativeOrder());
+	            mColorBuffer = cByteBuff.asFloatBuffer();
+	            mColorBuffer.put(colors);
+	            mColorBuffer.position(0);
+	            
 	            int vertexShader = MTGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,vertexShaderCode);
 	    		int fragShader = MTGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 	    		mProgram = GLES20.glCreateProgram();
@@ -108,28 +97,24 @@ public class CameraFrustrum {
 	    public void updateModelMatrix(float[] translation, float[] quaternion ) {
 	        
 	    	mTranslation = translation;
-	        mQuaternion = quaternion;
 	    	float[] quaternionMatrix = new float[16];
 	    	quaternionMatrix = quaternionM(quaternion);
 	    	
 	        Matrix.setIdentityM(modelMatrix, 0);
-	        
-	        //Matrix.rotateM(modelMatrix, 0, 90, 1f, 0f, 0f);
-	        //Matrix.rotateM(modelMatrix, 0, 90, 0f, 1f, 0f);
-	        Matrix.translateM(modelMatrix, 0, translation[0], translation[2], -translation[1]);
+	        Matrix.translateM(modelMatrix, 0, translation[0], translation[1], translation[2]);
 	        
 	        float[] mTempMatrix = new float[16];
 	        Matrix.setIdentityM(mTempMatrix, 0);
 	        
 	        if (quaternionMatrix != null) {
 	            Matrix.multiplyMM(mTempMatrix, 0, modelMatrix, 0, quaternionMatrix, 0);
-	            Matrix.rotateM(mTempMatrix, 0, 90, 0, 0, 1);
+	           
 	            System.arraycopy(mTempMatrix, 0, modelMatrix, 0, 16);
 	        }
 	    };
 	    
 	    public void updateViewMatrix(float[] viewMatrix) {
-	    	Matrix.setLookAtM(viewMatrix, 0, 0,5, 0+5.0f, mTranslation[0], mTranslation[2], -mTranslation[1], 0, 1, 0);
+	    	Matrix.setLookAtM(viewMatrix, 0, mTranslation[0], mTranslation[1]+5.0f, mTranslation[2]+5.0f, mTranslation[0], mTranslation[1], mTranslation[2], 0, 1, 0);
 		}
 	  
 
@@ -146,10 +131,16 @@ public class CameraFrustrum {
 	    	mPosHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");	
 	    	GLES20.glVertexAttribPointer(mPosHandle, COORDS_PER_VERTEX,GLES20.GL_FLOAT, false,0, mVertexBuffer);		
 	    	GLES20.glEnableVertexAttribArray(mPosHandle);	
+	    	
+	    	mColorHandle = GLES20.glGetAttribLocation(mProgram, "aColor");	
+	    	GLES20.glVertexAttribPointer(mColorHandle, 4, GLES20.GL_FLOAT, false, 0, mColorBuffer);
+	    	GLES20.glEnableVertexAttribArray(mColorHandle);
+
+	    	
 	    	mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");	
 	    	GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);	
-	    	GLES20.glLineWidth(3);
-	    	GLES20.glDrawArrays(GLES20.GL_LINES, 0, 16);
+	    	GLES20.glLineWidth(5);
+	    	GLES20.glDrawArrays(GLES20.GL_LINES, 0, 6);
 
 	    }
 	    

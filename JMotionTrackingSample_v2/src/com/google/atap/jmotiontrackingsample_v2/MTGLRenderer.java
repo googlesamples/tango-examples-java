@@ -18,7 +18,7 @@ import android.opengl.Matrix;
 public class MTGLRenderer implements GLSurfaceView.Renderer {
 	
 	public CameraFrustrum cameraFrustrum;
-	public Grid mFloorGrid;
+	private Grid mFloorGrid;
 	private float[] mViewMatrix = new float[16];
     private static final float CAMERA_FOV = 45f, CAMERA_NEAR = 1f, CAMERA_FAR = 200f;
     private static final int MATRIX_4X4 = 16;
@@ -55,7 +55,6 @@ public class MTGLRenderer implements GLSurfaceView.Renderer {
 	}
 	
     public static int loadShader(int type, String shaderCode){
-
         // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
         // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);

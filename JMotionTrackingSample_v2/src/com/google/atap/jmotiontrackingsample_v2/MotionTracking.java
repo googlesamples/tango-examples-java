@@ -31,28 +31,23 @@ public class MotionTracking extends Activity {
        super.onCreate(savedInstanceState); 
        setContentView(R.layout.activity_motion_tracking);
         
-       poseX = (TextView) findViewById(R.id.PosX);        
-       poseY = (TextView) findViewById(R.id.PosY);        
-       poseZ = (TextView) findViewById(R.id.PosZ);
+       poseX = (TextView) findViewById(R.id.poseX);        
+       poseY = (TextView) findViewById(R.id.poseY);        
+       poseZ = (TextView) findViewById(R.id.poseZ);
        poseQuaternion0 = (TextView) findViewById(R.id.Quaternion1);        
        poseQuaternion1 = (TextView) findViewById(R.id.Quaternion2);        
        poseQuaternion2 = (TextView) findViewById(R.id.Quaternion3);
        poseQuaternion3 = (TextView) findViewById(R.id.Quaternion4); 
        mGLView = (GLSurfaceView) findViewById(R.id.gl_surface_view); 
        
-       
        mRenderer = new MTGLRenderer();
        mGLView.setEGLContextClientVersion(2);
        mGLView.setRenderer(mRenderer);
        mGLView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-       mTango = new Tango(this);
-       
-       poseUpdater();
-       }
-
-	public void poseUpdater(){
-		mTango.connectListener(new OnTangoUpdateListener() { 
-			final DecimalFormat fourDec = new DecimalFormat("0.0000");
+       mTango = new Tango(this);      
+       mTango.connectListener(new OnTangoUpdateListener() { 
+    	   final DecimalFormat fourDec = new DecimalFormat("0.0000");
+			
 			@Override 
 			public void onPoseAvailable(final TangoPoseData pose) {
 				mRenderer.cameraFrustrum.updateModelMatrix(pose.translation, pose.rotation);  
@@ -60,14 +55,13 @@ public class MotionTracking extends Activity {
 				runOnUiThread(new Runnable(){  
 					@Override      
 					public void run() {        
-						poseX.setText("PosX: " +fourDec.format(pose.translation[0]));      
-						poseY.setText("PosY: " +fourDec.format(pose.translation[1]));       
-						poseZ.setText("PosZ: " +fourDec.format(pose.translation[2]));       
-						poseQuaternion0.setText("Q1: " +fourDec.format(pose.rotation[0]));      
-						poseQuaternion1.setText("Q2: " +fourDec.format(pose.rotation[1]));       
-						poseQuaternion2.setText("Q3: " +fourDec.format(pose.rotation[2]));       
-						poseQuaternion3.setText("Q4: " +fourDec.format(pose.rotation[3]));                             
-	                    //timestamp.setText(pose.timestamp + "");   
+						poseX.setText(fourDec.format(pose.translation[0]));      
+						poseY.setText(fourDec.format(pose.translation[1]));       
+						poseZ.setText(fourDec.format(pose.translation[2]));       
+						poseQuaternion0.setText(fourDec.format(pose.rotation[0]));      
+						poseQuaternion1.setText(fourDec.format(pose.rotation[1]));       
+						poseQuaternion2.setText(fourDec.format(pose.rotation[2]));       
+						poseQuaternion3.setText(fourDec.format(pose.rotation[3]));                             
 					}      
 				});    
 			}
@@ -78,5 +72,5 @@ public class MotionTracking extends Activity {
 			}
 		});
 	           mTango.connect();
-	}
+       }
 }

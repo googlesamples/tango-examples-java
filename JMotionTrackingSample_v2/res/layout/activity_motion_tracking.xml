@@ -1,86 +1,128 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Grid"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:columnCount="2" >
+    android:orientation="horizontal" >
 
-    <LinearLayout
-        android:id="@+id/LinearLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:gravity="left"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="com.google.atap.jmotiontrackingsample_v2.MotionTracking" >
+   <LinearLayout
+       android:layout_width="0dip"
+       android:layout_weight="1"
+       android:layout_height="match_parent"
+       android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/Quaternion1"
-            android:layout_width="104dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="51dp"
-            android:layout_marginTop="18dp"
-            android:text="Quaternion 1" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Position1" />
+            <TextView
+                android:id="@+id/poseX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/Quaternion2"
-            android:layout_width="106dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="51dp"
-            android:layout_marginTop="18dp"
-            android:text="Quaternion 2" />
+       <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Position2" />
+            <TextView
+                android:id="@+id/poseY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/Quaternion3"
-            android:layout_width="109dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="51dp"
-            android:layout_marginTop="18dp"
-            android:text="Quaternion 3" />
+       <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Position3" />
+            <TextView
+                android:id="@+id/poseZ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/Quaternion4"
-            android:layout_width="104dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="51dp"
-            android:layout_marginTop="18dp"
-            android:text="Quaternion 4" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Quaternion1" />
+            <TextView
+                android:id="@+id/Quaternion1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/PosX"
-            android:layout_width="102dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="51dp"
-            android:layout_marginTop="18dp"
-            android:text="Position X" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Quaternion2" />
+            <TextView
+                android:id="@+id/Quaternion2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/PosY"
-            android:layout_width="93dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="51dp"
-            android:layout_marginTop="18dp"
-            android:text="Position Y" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Quaternion3" />
+            <TextView
+                android:id="@+id/Quaternion3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/PosZ"
-            android:layout_width="94dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="51dp"
-            android:layout_marginTop="18dp"
-            android:text="Position Z" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Quaternion4" />
+            <TextView
+                android:id="@+id/Quaternion4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
 
     <android.opengl.GLSurfaceView
         android:id="@+id/gl_surface_view"
-        android:layout_width="619dp"
-        android:layout_height="380dp"
-        android:layout_column="1"
-        android:layout_gravity="left|center_vertical"
-        android:layout_row="0" />
+        android:layout_width="0dip"
+        android:layout_weight="5"
+        android:layout_height="match_parent"
+        android:layout_gravity="fill_horizontal"
+        />
 
-</GridLayout>
+</LinearLayout>
