@@ -1,7 +1,8 @@
-package com.google.atap.jmotiontrackingsample_v2;
+package com.projecttango.jmotiontrackingsample;
 
 import java.text.DecimalFormat;
 
+import com.google.atap.jmotiontrackingsample_v2.R;
 import com.google.atap.tangoservice.Tango;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.google.atap.tangoservice.TangoXyzIjData;
@@ -49,7 +50,7 @@ public class MotionTracking extends Activity {
 
 			@Override
 			public void onPoseAvailable(final TangoPoseData pose) {
-				mRenderer.cameraFrustrum.updateModelMatrix(pose.translation,
+				mRenderer.mCameraFrustum.updateModelMatrix(pose.translation,
 						pose.rotation);
 				mGLView.requestRender();
 				runOnUiThread(new Runnable() {

@@ -1,4 +1,4 @@
-package com.google.atap.jmotiontrackingsample_v2;
+package com.projecttango.jmotiontrackingsample;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glClearColor;
@@ -8,8 +8,8 @@ import static android.opengl.Matrix.setLookAtM;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.google.atap.jmotiontrackingsample_v2.Renderables.CameraFrustrum;
-import com.google.atap.jmotiontrackingsample_v2.Renderables.Grid;
+import com.projecttango.jmotiontrackingsample.Renderables.CameraFrustrum;
+import com.projecttango.jmotiontrackingsample.Renderables.Grid;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;

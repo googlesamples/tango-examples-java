@@ -1,15 +1,15 @@
-package com.google.atap.jmotiontrackingsample_v2.Renderables;
+package com.projecttango.jmotiontrackingsample.Renderables;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import com.google.atap.jmotiontrackingsample_v2.MTGLRenderer;
+import com.projecttango.jmotiontrackingsample.MTGLRenderer;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-public class CameraFrustrum {
+public class CameraFrustum {
 
 	private float[] mTranslation = new float[3];
 
@@ -55,7 +55,7 @@ public class CameraFrustrum {
 	static final int COORDS_PER_VERTEX = 3;
 	private int mMVPMatrixHandle;
 
-	public CameraFrustrum() {
+	public CameraFrustum() {
 		Matrix.setIdentityM(modelMatrix, 0);
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);

@@ -1,4 +1,4 @@
-package com.google.atap.jmotiontrackingsample_v2.Renderables;
+package com.projecttango.jmotiontrackingsample.Renderables;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -7,7 +7,7 @@ import java.nio.FloatBuffer;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.google.atap.jmotiontrackingsample_v2.MTGLRenderer;
+import com.projecttango.jmotiontrackingsample.MTGLRenderer;
 
 public class Grid {
 
