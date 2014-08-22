@@ -2,8 +2,8 @@ package com.projecttango.jmotiontrackingsample;
 
 import java.text.DecimalFormat;
 
-import com.google.atap.jmotiontrackingsample_v2.R;
 import com.google.atap.tangoservice.Tango;
+import com.google.atap.tangoservice.TangoConfig;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.google.atap.tangoservice.TangoXyzIjData;
 import com.google.atap.tangoservice.Tango.OnTangoUpdateListener;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 public class MotionTracking extends Activity {
 
 	private Tango mTango;
+	private TangoConfig mConfig;
 	private TextView poseX;
 	private TextView poseY;
 	private TextView poseZ;
@@ -45,12 +46,18 @@ public class MotionTracking extends Activity {
 		mGLView.setRenderer(mRenderer);
 		mGLView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		mTango = new Tango(this);
+//		mConfig = new TangoConfig();
+//		mTango.getConfig(TangoConfig.CONFIG_TYPE_CURRENT, mConfig);
+//		mConfig.putBoolean(TangoConfig.KEY_BOOLEAN_MOTIONTRACKING, true);
+		
 		mTango.connectListener(new OnTangoUpdateListener() {
 			final DecimalFormat fourDec = new DecimalFormat("0.0000");
 
 			@Override
 			public void onPoseAvailable(final TangoPoseData pose) {
 				mRenderer.mCameraFrustum.updateModelMatrix(pose.translation,
+						pose.rotation);
+				mRenderer.mAxis.updateModelMatrix(pose.translation,
 						pose.rotation);
 				mGLView.requestRender();
 				runOnUiThread(new Runnable() {
@@ -76,6 +83,34 @@ public class MotionTracking extends Activity {
 				// TODO Auto-generated method stub
 			}
 		});
+		//mTango.connect();
+		
+	}
+	
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		mTango.unlockConfig();
+		//mTango.disconnectSurface(0);
+		
+	}
+	
+	@Override
+	protected void onResume()
+	{	
+		super.onResume();
+		mConfig = new TangoConfig();
+	    mTango.getConfig(TangoConfig.CONFIG_TYPE_CURRENT, mConfig);
+		mConfig.putBoolean(TangoConfig.KEY_BOOLEAN_MOTIONTRACKING, true);
+		mTango.lockConfig(mConfig);
 		mTango.connect();
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		//mTango.unlockConfig();
+	}
+	
 }

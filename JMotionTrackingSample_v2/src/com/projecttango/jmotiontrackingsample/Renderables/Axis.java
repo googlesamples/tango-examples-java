@@ -12,7 +12,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-public class CameraFrustum {
+public class Axis {
 
 	private float[] mTranslation = new float[3];
 	private float[] mQuaternion = new float[4];
@@ -32,32 +32,15 @@ public class CameraFrustum {
 			"precision mediump float;"
 			+ "varying vec4 vColor;" 
 			+ "void main() {"
-			+ "gl_FragColor = vec4(0.8,0.5,0.8,1);" + 
+			+ "gl_FragColor = vColor;" + 
 			"}";
 
-	private float vertices[] = {   0.0f, 0.0f, 0.0f,
-		    -0.4f, 0.3f, -0.5f,
-
+	private float vertices[] = {  0.0f, 0.0f, 0.0f,
+		    1.0f, 0.0f, 0.0f,
 		    0.0f, 0.0f, 0.0f,
-		    0.4f, 0.3f, -0.5f,
-
+		    0.0f, 1.0f, 0.0f,
 		    0.0f, 0.0f, 0.0f,
-		    -0.4f, -0.3f, -0.5f,
-
-		    0.0f, 0.0f, 0.0f,
-		    0.4f, -0.3f, -0.5f,
-
-		    -0.4f, 0.3f, -0.5f,
-		    0.4f, 0.3f, -0.5f,
-
-		    0.4f, 0.3f, -0.5f,
-		    0.4f, -0.3f, -0.5f,
-
-		    0.4f, -0.3f, -0.5f,
-		    -0.4f, -0.3f, -0.5f,
-
-		    -0.4f, -0.3f, -0.5f,
-		    -0.4f, 0.3f, -0.5f  };
+		    0.0f, 0.0f, 1.0f  };
 
 	private float colors[] = { 1.0f, 0.0f, 0.0f, 1.0f,
 			1.0f, 0.0f, 0.0f, 1.0f,
@@ -66,22 +49,7 @@ public class CameraFrustum {
 			0.0f, 1.0f, 0.0f, 1.0f,
 			
 			0.0f, 0.0f, 1.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 1.0f,
-			
-			1.0f, 0.0f, 0.0f, 1.0f,
-			1.0f, 0.0f, 0.0f, 1.0f,
-			
-			0.0f, 1.0f, 0.0f, 1.0f,
-			0.0f, 1.0f, 0.0f, 1.0f,
-			
-			0.0f, 0.0f, 1.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 1.0f,
-			
-			1.0f, 0.0f, 0.0f, 1.0f,
-			1.0f, 0.0f, 0.0f, 1.0f,
-			
-			0.0f, 1.0f, 0.0f, 1.0f,
-			0.0f, 1.0f, 0.0f, 1.0f};
+			0.0f, 0.0f, 1.0f, 1.0f, };
 
 	private float[] modelMatrix = new float[16];
 	private float[] mvMatrix = new float[16];
@@ -92,7 +60,7 @@ public class CameraFrustum {
 	static final int COORDS_PER_VERTEX = 3;
 	private int mMVPMatrixHandle;
 
-	public CameraFrustum() {
+	public Axis() {
 		Matrix.setIdentityM(modelMatrix, 0);
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -126,7 +94,7 @@ public class CameraFrustum {
 		float[] quaternionMatrix = new float[16];
 		
 		quaternionMatrix = MathUtils.quaternionM(openglQuaternion);
-		//quaternionMatrix = MathUtils.quaternionM(quaternion);		
+		//quaternionMatrix = MathUtils.quaternionM(quaternion);
 		Matrix.setIdentityM(modelMatrix, 0);
 		Matrix.translateM(modelMatrix, 0, translation[0], translation[2],
 				-translation[1]);
@@ -143,8 +111,8 @@ public class CameraFrustum {
 	};
 
 	public void updateViewMatrix(float[] viewMatrix) {
-		Matrix.setLookAtM(viewMatrix, 0,0,
-				 5.0f,5.0f,
+		Matrix.setLookAtM(viewMatrix, 0, 0,
+				 5.0f, 5.0f,
 				mTranslation[0], mTranslation[1], mTranslation[2], 0, 1, 0);
 	}
 
@@ -171,8 +139,7 @@ public class CameraFrustum {
 		mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
 		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 		GLES20.glLineWidth(5);
-		GLES20.glDrawArrays(GLES20.GL_LINES, 0, 16
-				);
+		GLES20.glDrawArrays(GLES20.GL_LINES, 0, 6);
 
 	}
 	

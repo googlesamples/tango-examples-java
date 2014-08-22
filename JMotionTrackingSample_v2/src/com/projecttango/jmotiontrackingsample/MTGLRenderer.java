@@ -8,7 +8,8 @@ import static android.opengl.Matrix.setLookAtM;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.projecttango.jmotiontrackingsample.Renderables.CameraFrustrum;
+import com.projecttango.jmotiontrackingsample.Renderables.Axis;
+import com.projecttango.jmotiontrackingsample.Renderables.CameraFrustum;
 import com.projecttango.jmotiontrackingsample.Renderables.Grid;
 
 import android.opengl.GLES20;
@@ -16,7 +17,8 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
 public class MTGLRenderer implements GLSurfaceView.Renderer {
-	public CameraFrustrum cameraFrustrum;
+	public CameraFrustum mCameraFrustum;
+	public Axis mAxis;
 	private Grid mFloorGrid;
 	private float[] mViewMatrix = new float[16];
 	private static final float CAMERA_FOV = 45f, CAMERA_NEAR = 1f,
@@ -32,10 +34,11 @@ public class MTGLRenderer implements GLSurfaceView.Renderer {
 		// TODO Auto-generated method stub
 		glClearColor(1f, 1f, 1f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
-		cameraFrustrum = new CameraFrustrum();
+		mCameraFrustum = new CameraFrustum();
 		mFloorGrid = new Grid();
+		mAxis = new Axis();
 		Matrix.setIdentityM(mViewMatrix, 0);
-		setLookAtM(mViewMatrix, 0, 0f, 0f, 10f, 0f, 0f, 0f, 0f, 1f, 0f);
+		setLookAtM(mViewMatrix, 0, 0f, 5f, 5f, 0f, 0f, 0f, 0f, 1f, 0f);
 	}
 
 	@Override
@@ -52,7 +55,8 @@ public class MTGLRenderer implements GLSurfaceView.Renderer {
 		// TODO Auto-generated method stub
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 		mFloorGrid.draw(mViewMatrix, mProjectionMatrix);
-		cameraFrustrum.draw(mViewMatrix, mProjectionMatrix);
+		mAxis.draw(mViewMatrix, mProjectionMatrix);
+		mCameraFrustum.draw(mViewMatrix, mProjectionMatrix);
 	}
 
 	public static int loadShader(int type, String shaderCode) {
