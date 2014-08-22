@@ -46,9 +46,9 @@ public class MotionTracking extends Activity {
 		mGLView.setRenderer(mRenderer);
 		mGLView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		mTango = new Tango(this);
-//		mConfig = new TangoConfig();
-//		mTango.getConfig(TangoConfig.CONFIG_TYPE_CURRENT, mConfig);
-//		mConfig.putBoolean(TangoConfig.KEY_BOOLEAN_MOTIONTRACKING, true);
+		mConfig = new TangoConfig();
+		mTango.getConfig(TangoConfig.CONFIG_TYPE_CURRENT, mConfig);
+		mConfig.putBoolean(TangoConfig.KEY_BOOLEAN_MOTIONTRACKING, true);
 		
 		mTango.connectListener(new OnTangoUpdateListener() {
 			final DecimalFormat fourDec = new DecimalFormat("0.0000");
@@ -83,8 +83,6 @@ public class MotionTracking extends Activity {
 				// TODO Auto-generated method stub
 			}
 		});
-		//mTango.connect();
-		
 	}
 	
 	@Override
@@ -92,7 +90,7 @@ public class MotionTracking extends Activity {
 	{
 		super.onPause();
 		mTango.unlockConfig();
-		//mTango.disconnectSurface(0);
+		mTango.disconnect();
 		
 	}
 	
@@ -100,9 +98,6 @@ public class MotionTracking extends Activity {
 	protected void onResume()
 	{	
 		super.onResume();
-		mConfig = new TangoConfig();
-	    mTango.getConfig(TangoConfig.CONFIG_TYPE_CURRENT, mConfig);
-		mConfig.putBoolean(TangoConfig.KEY_BOOLEAN_MOTIONTRACKING, true);
 		mTango.lockConfig(mConfig);
 		mTango.connect();
 	}
