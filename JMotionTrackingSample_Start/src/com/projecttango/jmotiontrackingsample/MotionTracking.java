@@ -7,13 +7,13 @@ import android.widget.TextView;
 
 public class MotionTracking extends Activity {
 
-	private TextView poseX;
-	private TextView poseY;
-	private TextView poseZ;
-	private TextView poseQuaternion0;
-	private TextView poseQuaternion1;
-	private TextView poseQuaternion2;
-	private TextView poseQuaternion3;
+	private TextView mPoseX;
+	private TextView mPoseY;
+	private TextView mPoseZ;
+	private TextView mPoseQuaternion0;
+	private TextView mPoseQuaternion1;
+	private TextView mPoseQuaternion2;
+	private TextView mPoseQuaternion3;
 	public MTGLRenderer mRenderer;
 	public GLSurfaceView mGLView;
 
@@ -22,31 +22,28 @@ public class MotionTracking extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_motion_tracking);
 
-		poseX = (TextView) findViewById(R.id.poseX);
-		poseY = (TextView) findViewById(R.id.poseY);
-		poseZ = (TextView) findViewById(R.id.poseZ);
-		poseQuaternion0 = (TextView) findViewById(R.id.Quaternion1);
-		poseQuaternion1 = (TextView) findViewById(R.id.Quaternion2);
-		poseQuaternion2 = (TextView) findViewById(R.id.Quaternion3);
-		poseQuaternion3 = (TextView) findViewById(R.id.Quaternion4);
+		mPoseX = (TextView) findViewById(R.id.poseX);
+		mPoseY = (TextView) findViewById(R.id.poseY);
+		mPoseZ = (TextView) findViewById(R.id.poseZ);
+		mPoseQuaternion0 = (TextView) findViewById(R.id.Quaternion1);
+		mPoseQuaternion1 = (TextView) findViewById(R.id.Quaternion2);
+		mPoseQuaternion2 = (TextView) findViewById(R.id.Quaternion3);
+		mPoseQuaternion3 = (TextView) findViewById(R.id.Quaternion4);
 		mGLView = (GLSurfaceView) findViewById(R.id.gl_surface_view);
 
 		mRenderer = new MTGLRenderer();
 		mGLView.setEGLContextClientVersion(2);
 		mGLView.setRenderer(mRenderer);
 		mGLView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-		
 	}
 	
 	@Override
-	protected void onPause()
-	{
+	protected void onPause() {
 		super.onPause();
 	}
 	
 	@Override
-	protected void onResume()
-	{	
+	protected void onResume() {	
 		super.onResume();
 	}
 	

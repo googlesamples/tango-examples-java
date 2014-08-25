@@ -2,53 +2,53 @@ package com.projecttango.jmotiontrackingsample.Renderables;
 
 public class MathUtils {
 	
-	public static float[] ConvertQuaternionToOpenGl(float[] quaternion)
-	{
-		double[] xAxis = {1,0,0};
-		float[] rotation_offsetX = RotateQuaternionWithAngleAxis(quaternion, 1.57079, xAxis );
-		double[] zAxis = {0,0,-1};
-		float[] rotation_offsetZ = RotateQuaternionWithAngleAxis(rotation_offsetX, 1.57079, zAxis );
-		float[] rotation_inversed = InvertQuaternion(rotation_offsetZ);
-		float[] openglQuaternion = {rotation_inversed[3],rotation_inversed[1],-rotation_inversed[0],rotation_inversed[2]};
-		//Log.e("Opengl Rotation Quaternion:",""+openglQuaternion[0]+" "+openglQuaternion[1]+" " +openglQuaternion[2]+" "+ openglQuaternion[3]+" ");
+	public static float[] convertQuaternionToOpenGl(float[] quaternion) {
+		double[] xAxis = {1, 0, 0};
+		float[] rotation_offsetX = rotateQuaternionWithAngleAxis(quaternion, 1.57079, xAxis);
+		double[] zAxis = {0, 0, -1};
+		float[] rotation_offsetZ = rotateQuaternionWithAngleAxis(rotation_offsetX, 1.57079, zAxis);
+		float[] rotation_inversed = invertQuaternion(rotation_offsetZ);
+		float[] openglQuaternion = {rotation_inversed[3], rotation_inversed[1], 
+				-rotation_inversed[0], rotation_inversed[2]};
+		
 		return openglQuaternion;		
 	}
 	
-	public static float[] InvertQuaternion(float[] Quaternion)
-	{	
-		float sqNorm = (float) (Math.pow(Quaternion[0], 2) + Math.pow(Quaternion[1], 2) + Math.pow(Quaternion[2], 2)+ Math.pow(Quaternion[3], 2));
+	public static float[] invertQuaternion(float[] quaternion) {	
+		float sqNorm = (float) (Math.pow(quaternion[0], 2) + Math.pow(quaternion[1], 2) + 
+				Math.pow(quaternion[2], 2)+ Math.pow(quaternion[3], 2));
 		float[] inversedQ = new float[4];
-		inversedQ[0] = Quaternion[0]/sqNorm;
-		inversedQ[1] = Quaternion[1]/sqNorm;
-		inversedQ[2] = Quaternion[2]/sqNorm;
-		inversedQ[3] = Quaternion[3]/sqNorm;
-		 //Log.e("INverse Rotated:",""+inversedQ[0]+" "+inversedQ[1]+" " +inversedQ[2]+" "+ inversedQ[3]+" ");
+		inversedQ[0] = quaternion[0] / sqNorm;
+		inversedQ[1] = quaternion[1] / sqNorm;
+		inversedQ[2] = quaternion[2] / sqNorm;
+		inversedQ[3] = quaternion[3] / sqNorm;
+		
 		return inversedQ;
 	}
 	
-	public static float[] RotateQuaternionWithAngleAxis(float[] quaternion, double angleInRadians,double[] axisVector)
-	{
+	public static float[] rotateQuaternionWithAngleAxis(float[] quaternion, double angleInRadians, 
+			double[] axisVector) {
+		
 		float norm = (float) Math.sqrt(Math.pow(axisVector[0], 2) + Math.pow(axisVector[1], 2) + Math.pow(axisVector[2], 2));
 		float sin_half_angle = (float) Math.sin(angleInRadians / 2.0f);
         float x = (float) (sin_half_angle * axisVector[0] / norm);
         float y = (float) (sin_half_angle * axisVector[1] / norm);
         float z = (float) (sin_half_angle * axisVector[2] / norm);
         float w = (float)Math.cos(angleInRadians / 2.0f);
-        float[] rotatedQuaternion = {x,y,z,w};
+        float[] rotatedQuaternion = {x, y ,z, w};
         float[] multiQuaternion = multiplyQuarternions(rotatedQuaternion, quaternion);
-       // Log.e("Rotated:",""+multiQuaternion[0]+" "+multiQuaternion[1]+" " +multiQuaternion[2]+" "+ multiQuaternion[3]+" ");
+        
         return multiQuaternion;
 	}
 	
-	public static float[] multiplyQuarternions(float[] a,float[] b)
-	{
+	public static float[] multiplyQuarternions(float[] a,float[] b) {
 		float[] multipliedQuaternion = new float[4];
 		multipliedQuaternion[0] = a[0]*b[0] - a[1]*b[1] - a[2]*b[2] - a[3]*b[3];
 		multipliedQuaternion[1] = a[0]*b[1] + a[1]*b[0] + a[2]*b[3] - a[3]*b[2];
 		multipliedQuaternion[2] = a[0]*b[2] - a[1]*b[3] + a[2]*b[0] + a[3]*b[1];
 		multipliedQuaternion[3] = a[0]*b[3] + a[1]*b[2] - a[2]*b[1] + a[3]*b[3];
-		return multipliedQuaternion;
 		
+		return multipliedQuaternion;
 	}
 	
 	public static float[] quaternionM(float[] quaternion) {
@@ -89,18 +89,23 @@ public class MathUtils {
 		matrix[13] = 0f;
 		matrix[14] = 0f;
 		matrix[15] = 1f;
+		
 		return matrix;
 	}
 
+	/**
+	 * Creates a unit vector in the direction of an arbitrary vector.  The original vector is
+	 * modified in place.
+	 * @param v the vector to normalize
+	 */
 	public static void normalizeVector(float[] v) {
-
 		float mag2 = v[0] * v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3];
 		if (Math.abs(mag2) > 0.00001f && Math.abs(mag2 - 1.0f) > 0.00001f) {
 			float mag = (float) Math.sqrt(mag2);
-			v[0] /= mag;
-			v[1] /= mag;
-			v[2] /= mag;
-			v[3] /= mag;
+			v[0] = v[0] / mag;
+			v[1] = v[1] / mag;
+			v[2] = v[2] / mag;
+			v[3] = v[3] / mag;
 		}
 	}
 
