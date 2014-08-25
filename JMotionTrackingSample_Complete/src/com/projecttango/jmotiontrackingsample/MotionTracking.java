@@ -18,86 +18,87 @@ public class MotionTracking extends Activity {
 
 	private Tango mTango;
 	private TangoConfig mConfig;
-	private TextView poseX;
-	private TextView poseY;
-	private TextView poseZ;
-	private TextView poseQuaternion0;
-	private TextView poseQuaternion1;
-	private TextView poseQuaternion2;
-	private TextView poseQuaternion3;
-	public MTGLRenderer mRenderer;
-	public GLSurfaceView mGLView;
+	
+	private TextView mPoseX;
+	private TextView mPoseY;
+	private TextView mPoseZ;
+	private TextView mPoseQuaternion0;
+	private TextView mPoseQuaternion1;
+	private TextView mPoseQuaternion2;
+	private TextView mPoseQuaternion3;
+	
+	private MTGLRenderer mRenderer;
+	private GLSurfaceView mGLView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_motion_tracking);
 
-		poseX = (TextView) findViewById(R.id.poseX);
-		poseY = (TextView) findViewById(R.id.poseY);
-		poseZ = (TextView) findViewById(R.id.poseZ);
-		poseQuaternion0 = (TextView) findViewById(R.id.Quaternion1);
-		poseQuaternion1 = (TextView) findViewById(R.id.Quaternion2);
-		poseQuaternion2 = (TextView) findViewById(R.id.Quaternion3);
-		poseQuaternion3 = (TextView) findViewById(R.id.Quaternion4);
+		mPoseX = (TextView) findViewById(R.id.poseX);
+		mPoseY = (TextView) findViewById(R.id.poseY);
+		mPoseZ = (TextView) findViewById(R.id.poseZ);
+		mPoseQuaternion0 = (TextView) findViewById(R.id.Quaternion1);
+		mPoseQuaternion1 = (TextView) findViewById(R.id.Quaternion2);
+		mPoseQuaternion2 = (TextView) findViewById(R.id.Quaternion3);
+		mPoseQuaternion3 = (TextView) findViewById(R.id.Quaternion4);
 		mGLView = (GLSurfaceView) findViewById(R.id.gl_surface_view);
 
 		mRenderer = new MTGLRenderer();
 		mGLView.setEGLContextClientVersion(2);
 		mGLView.setRenderer(mRenderer);
 		mGLView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		
+		// Instantiate the Tango service
 		mTango = new Tango(this);
 		mConfig = new TangoConfig();
 		mTango.getConfig(TangoConfig.CONFIG_TYPE_CURRENT, mConfig);
 		mConfig.putBoolean(TangoConfig.KEY_BOOLEAN_MOTIONTRACKING, true);
 		
+		// Listen for new Tango data
 		mTango.connectListener(new OnTangoUpdateListener() {
 			final DecimalFormat fourDec = new DecimalFormat("0.0000");
 
 			@Override
 			public void onPoseAvailable(final TangoPoseData pose) {
-				mRenderer.mCameraFrustum.updateModelMatrix(pose.translation,
-						pose.rotation);
-				mRenderer.mAxis.updateModelMatrix(pose.translation,
-						pose.rotation);
+				// Update the Axis and CameraFrustum with new pose data, then render
+				mRenderer.getCameraFrustum().updateModelMatrix(pose.translation, pose.rotation);
+				mRenderer.getAxis().updateModelMatrix(pose.translation, pose.rotation);
 				mGLView.requestRender();
+				
+				// Run UI updates on the UI thread, doing this in the service's main thread
+				//	will result in an error.
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						poseX.setText(fourDec.format(pose.translation[0]));
-						poseY.setText(fourDec.format(pose.translation[1]));
-						poseZ.setText(fourDec.format(pose.translation[2]));
-						poseQuaternion0.setText(fourDec
-								.format(pose.rotation[0]));
-						poseQuaternion1.setText(fourDec
-								.format(pose.rotation[1]));
-						poseQuaternion2.setText(fourDec
-								.format(pose.rotation[2]));
-						poseQuaternion3.setText(fourDec
-								.format(pose.rotation[3]));
+						// Display pose data on screen in TextViews
+						mPoseX.setText(fourDec.format(pose.translation[0]));
+						mPoseY.setText(fourDec.format(pose.translation[1]));
+						mPoseZ.setText(fourDec.format(pose.translation[2]));
+						mPoseQuaternion0.setText(fourDec.format(pose.rotation[0]));
+						mPoseQuaternion1.setText(fourDec.format(pose.rotation[1]));
+						mPoseQuaternion2.setText(fourDec.format(pose.rotation[2]));
+						mPoseQuaternion3.setText(fourDec.format(pose.rotation[3]));
 					}
 				});
 			}
 
 			@Override
 			public void onXyzIjAvailable(TangoXyzIjData arg0) {
-				// TODO Auto-generated method stub
+				// We are not using TangoXyzIjData for this application
 			}
 		});
 	}
 	
 	@Override
-	protected void onPause()
-	{
+	protected void onPause() {
 		super.onPause();
 		mTango.unlockConfig();
 		mTango.disconnect();
-		
 	}
 	
 	@Override
-	protected void onResume()
-	{	
+	protected void onResume() {	
 		super.onResume();
 		mTango.lockConfig(mConfig);
 		mTango.connect();
@@ -106,7 +107,7 @@ public class MotionTracking extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		//mTango.unlockConfig();
+		// mTango.unlockConfig();
 	}
 	
 }
