@@ -7,6 +7,7 @@ import com.google.atap.tangoservice.TangoConfig;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.google.atap.tangoservice.TangoXyzIjData;
 import com.google.atap.tangoservice.Tango.OnTangoUpdateListener;
+import com.projecttango.jmotiontrackingsample_finished.R;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
