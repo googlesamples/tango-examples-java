@@ -101,10 +101,10 @@ public class Axis {
 		float[] openglQuaternion = MathUtils.convertQuaternionToOpenGl(quaternion);
 		float[] quaternionMatrix = new float[16];
 		
-		// Update the model matrix with translation data
-		quaternionMatrix = MathUtils.quaternionM(openglQuaternion);
+		//quaternionMatrix = MathUtils.quaternionM(openglQuaternion);
+		quaternionMatrix = MathUtils.quaternionM(quaternion);		
 		Matrix.setIdentityM(mModelMatrix, 0);
-		Matrix.translateM(mModelMatrix, 0, translation[0], translation[2], -translation[1]);
+		//Matrix.translateM(mModelMatrix, 0, translation[0], translation[2], -translation[1]);
 
 		// Update the model matrix with rotation data
 		if (quaternionMatrix != null) {

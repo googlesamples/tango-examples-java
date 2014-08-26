@@ -38,7 +38,7 @@ public class MTGLRenderer implements GLSurfaceView.Renderer {
 		
 		// Construct the initial view matrix
 		Matrix.setIdentityM(mViewMatrix, 0);
-		Matrix.setLookAtM(mViewMatrix, 0, 0f, 5f, 5f, 0f, 0f, 0f, 0f, 1f, 0f);
+		Matrix.setLookAtM(mViewMatrix, 0, 0f, 5f, 0f, 0f, 0f, 0f, 0f, 0f, -1f);
 	}
 
 	@Override

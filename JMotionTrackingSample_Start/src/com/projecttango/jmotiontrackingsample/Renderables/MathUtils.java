@@ -3,14 +3,9 @@ package com.projecttango.jmotiontrackingsample.Renderables;
 public class MathUtils {
 	
 	public static float[] convertQuaternionToOpenGl(float[] quaternion) {
-		double[] xAxis = {1, 0, 0};
+		double[] xAxis = {-1, 0, 0};
 		float[] rotation_offsetX = rotateQuaternionWithAngleAxis(quaternion, 1.57079, xAxis);
-		double[] zAxis = {0, 0, -1};
-		float[] rotation_offsetZ = rotateQuaternionWithAngleAxis(rotation_offsetX, 1.57079, zAxis);
-		float[] rotation_inversed = invertQuaternion(rotation_offsetZ);
-		float[] openglQuaternion = {rotation_inversed[3], rotation_inversed[1], 
-				-rotation_inversed[0], rotation_inversed[2]};
-		
+		float[] openglQuaternion = {rotation_offsetX[3],rotation_offsetX[0],rotation_offsetX[2],-rotation_offsetX[1]};
 		return openglQuaternion;		
 	}
 	
@@ -18,9 +13,9 @@ public class MathUtils {
 		float sqNorm = (float) (Math.pow(quaternion[0], 2) + Math.pow(quaternion[1], 2) + 
 				Math.pow(quaternion[2], 2)+ Math.pow(quaternion[3], 2));
 		float[] inversedQ = new float[4];
-		inversedQ[0] = quaternion[0] / sqNorm;
-		inversedQ[1] = quaternion[1] / sqNorm;
-		inversedQ[2] = quaternion[2] / sqNorm;
+		inversedQ[0] = -quaternion[0] / sqNorm;
+		inversedQ[1] = -quaternion[1] / sqNorm;
+		inversedQ[2] = -quaternion[2] / sqNorm;
 		inversedQ[3] = quaternion[3] / sqNorm;
 		
 		return inversedQ;

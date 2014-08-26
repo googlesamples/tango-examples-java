@@ -131,10 +131,10 @@ public class CameraFrustum {
 		float[] openglQuaternion = MathUtils.convertQuaternionToOpenGl(quaternion);
 		float[] quaternionMatrix = new float[16];
 		
-		quaternionMatrix = MathUtils.quaternionM(openglQuaternion);
-		//quaternionMatrix = MathUtils.quaternionM(quaternion);		
+		//quaternionMatrix = MathUtils.quaternionM(openglQuaternion);
+		quaternionMatrix = MathUtils.quaternionM(quaternion);		
 		Matrix.setIdentityM(mModelMatrix, 0);
-		Matrix.translateM(mModelMatrix, 0, translation[0], translation[2], -translation[1]);
+		//Matrix.translateM(mModelMatrix, 0, translation[0], translation[2], -translation[1]);
 
 		if (quaternionMatrix != null) {
 			float[] mTempMatrix = new float[16];
