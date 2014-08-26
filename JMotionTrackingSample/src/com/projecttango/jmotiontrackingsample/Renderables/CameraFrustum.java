@@ -30,8 +30,6 @@ public class CameraFrustum {
 			+ "gl_FragColor = vec4(0.8,0.5,0.8,1);" + 
 			"}";
 	
-	private float[] mTranslation = new float[3];
-	private float[] mQuaternion = new float[4];
 	private FloatBuffer mVertexBuffer, mColorBuffer;
 
 	private float mVertices[] = {   
@@ -125,8 +123,6 @@ public class CameraFrustum {
 	 * @param quaternion a four-element array of rotation data.
 	 */
 	public void updateModelMatrix(float[] translation, float[] quaternion) {
-		mTranslation = translation;
-		mQuaternion = quaternion;
 		
 		float[] openglQuaternion = MathUtils.convertQuaternionToOpenGl(quaternion);
 		float[] quaternionMatrix = new float[16];
@@ -134,21 +130,17 @@ public class CameraFrustum {
 		//quaternionMatrix = MathUtils.quaternionM(openglQuaternion);
 		quaternionMatrix = MathUtils.quaternionM(quaternion);		
 		Matrix.setIdentityM(mModelMatrix, 0);
-		//Matrix.translateM(mModelMatrix, 0, translation[0], translation[2], -translation[1]);
+		Matrix.translateM(mModelMatrix, 0, translation[0], translation[2], -translation[1]);
 
+		// Update the model matrix with rotation data
 		if (quaternionMatrix != null) {
 			float[] mTempMatrix = new float[16];
-			Matrix.setIdentityM(mTempMatrix, 0);
-			
-			Matrix.multiplyMM(mTempMatrix, 0, quaternionMatrix, 0, mModelMatrix, 0);
-			mModelMatrix = mTempMatrix;
+			Matrix.setIdentityM(mTempMatrix, 0);	
+			Matrix.multiplyMM(mTempMatrix, 0, mModelMatrix, 0, quaternionMatrix, 0);
+			System.arraycopy(mTempMatrix, 0, mModelMatrix, 0, 16);
 		}
 	};
 
-	public void updateViewMatrix(float[] viewMatrix) {
-		Matrix.setLookAtM(viewMatrix, 0, 0, 5.0f, 5.0f, mTranslation[0], mTranslation[1], 
-				mTranslation[2], 0, 1, 0);
-	}
 
 	/**
 	 * Applies the view and projection matrices and draws the CameraFrustum.
@@ -179,7 +171,7 @@ public class CameraFrustum {
 		// Draw the CameraFrustum
 		mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
 		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMvpMatrix, 0);
-		GLES20.glLineWidth(5);
+		GLES20.glLineWidth(3);
 		GLES20.glDrawArrays(GLES20.GL_LINES, 0, 16);
 	}
 	
