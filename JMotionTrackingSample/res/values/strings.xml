@@ -8,4 +8,5 @@
  	<string name="Position1">Pos1:</string>
  	<string name="Position2">Pos2:</string>
  	<string name="Position3">Pos3:</string>
+ 	<string name="Status">Status:</string>
 </resources>

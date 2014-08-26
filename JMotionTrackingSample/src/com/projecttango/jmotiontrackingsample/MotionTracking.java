@@ -25,7 +25,7 @@ public class MotionTracking extends Activity {
 	private TextView mPoseQuaternion1;
 	private TextView mPoseQuaternion2;
 	private TextView mPoseQuaternion3;
-	
+	private TextView mPoseStatus;
 	private MTGLRenderer mRenderer;
 	private GLSurfaceView mGLView;
 
@@ -41,6 +41,7 @@ public class MotionTracking extends Activity {
 		mPoseQuaternion1 = (TextView) findViewById(R.id.Quaternion2);
 		mPoseQuaternion2 = (TextView) findViewById(R.id.Quaternion3);
 		mPoseQuaternion3 = (TextView) findViewById(R.id.Quaternion4);
+		mPoseStatus = (TextView) findViewById(R.id.Status);
 		mGLView = (GLSurfaceView) findViewById(R.id.gl_surface_view);
 
 		mRenderer = new MTGLRenderer();
@@ -55,7 +56,8 @@ public class MotionTracking extends Activity {
 		mConfig.putBoolean(TangoConfig.KEY_BOOLEAN_MOTIONTRACKING, true);
 		
 		// Listen for new Tango data
-		mTango.connectListener(new OnTangoUpdateListener() {
+		mTango.connectListener(TangoPoseData.COORDINATE_FRAME_DEVICE,
+                TangoPoseData.COORDINATE_FRAME_START_OF_SERVICE,new OnTangoUpdateListener() {
 			final DecimalFormat fourDec = new DecimalFormat("0.0000");
 
 			@Override
@@ -78,6 +80,18 @@ public class MotionTracking extends Activity {
 						mPoseQuaternion1.setText(fourDec.format(pose.rotation[1]));
 						mPoseQuaternion2.setText(fourDec.format(pose.rotation[2]));
 						mPoseQuaternion3.setText(fourDec.format(pose.rotation[3]));
+						if(pose.statusCode == TangoPoseData.POSE_VALID){
+							mPoseStatus.setText("Valid");
+						}
+						else if(pose.statusCode == TangoPoseData.POSE_INVALID){
+							mPoseStatus.setText("Invalid");
+						}
+						else if(pose.statusCode == TangoPoseData.POSE_INITIALIZING){
+							mPoseStatus.setText("Initializing");
+						}
+						else if(pose.statusCode == TangoPoseData.POSE_UNKNOWN){
+							mPoseStatus.setText("Unknown");
+						}
 					}
 				});
 			}
