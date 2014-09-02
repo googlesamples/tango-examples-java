@@ -59,7 +59,7 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 	private Button mThirdPersonButton;
 	private Button mTopDownButton;
 	private float mPreviousX,mPreviousY;
-	private TextView mPreviousPose;
+	// private TextView mPreviousPose;
 	
 	private MTGLRenderer mRenderer;
 	private GLSurfaceView mGLView;
@@ -76,7 +76,7 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 		mPoseQuaternion1 = (TextView) findViewById(R.id.Quaternion2);
 		mPoseQuaternion2 = (TextView) findViewById(R.id.Quaternion3);
 		mPoseQuaternion3 = (TextView) findViewById(R.id.Quaternion4);
-		mPreviousPose = (TextView) findViewById(R.id.previousPose);
+		// mPreviousPose = (TextView) findViewById(R.id.previousPose);
 		
 		mFirstPersonButton = (Button) findViewById(R.id.firstPerson);
 		mThirdPersonButton = (Button) findViewById(R.id.thirdPerson);
