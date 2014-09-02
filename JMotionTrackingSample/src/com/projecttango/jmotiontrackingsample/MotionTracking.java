@@ -59,7 +59,7 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 	private Button mThirdPersonButton;
 	private Button mTopDownButton;
 	private float mPreviousX,mPreviousY;
-	private TextView mPreviousPose;
+	// private TextView mPreviousPose;
 	
 	private MTGLRenderer mRenderer;
 	private GLSurfaceView mGLView;
@@ -76,7 +76,7 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 		mPoseQuaternion1 = (TextView) findViewById(R.id.Quaternion2);
 		mPoseQuaternion2 = (TextView) findViewById(R.id.Quaternion3);
 		mPoseQuaternion3 = (TextView) findViewById(R.id.Quaternion4);
-		mPreviousPose = (TextView) findViewById(R.id.previousPose);
+		// mPreviousPose = (TextView) findViewById(R.id.previousPose);
 		
 		mFirstPersonButton = (Button) findViewById(R.id.firstPerson);
 		mThirdPersonButton = (Button) findViewById(R.id.thirdPerson);
@@ -120,7 +120,7 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 			public void onPoseAvailable(final TangoPoseData pose) {
 				mRenderer.getTrajectory().updateTrajectory(pose.translation);
 				mRenderer.getModelMatCalculator().updateModelMatrix(pose.translation, pose.rotation);
-				mRenderer.UpdateViewMatrix();
+				mRenderer.updateViewMatrix();
 				mGLView.requestRender();
 //				final TangoPoseData previousPose = new TangoPoseData();
 //				final int poseAvailability = mTango.getPoseAtTime(pose.timestamp-10.0f,framePairs.get(0),previousPose);
