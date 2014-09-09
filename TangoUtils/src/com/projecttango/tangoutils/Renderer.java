@@ -36,7 +36,7 @@ public class Renderer {
 			break;
 		case THIRD_PERSON:
 			Matrix.setIdentityM(mViewMatrix, 0);
-			Matrix.setLookAtM(mViewMatrix, 0, devicePosition[0], 5.0f + devicePosition[1], 
+			Matrix.setLookAtM(mViewMatrix, 0, devicePosition[0]+5.0f, 5.0f + devicePosition[1], 
 					5.0f + devicePosition[2], devicePosition[0], devicePosition[1], 
 					devicePosition[2], 0f, 1f, 0f);
 			break;
