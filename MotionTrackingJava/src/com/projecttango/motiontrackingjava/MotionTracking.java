@@ -56,9 +56,6 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 	private TextView mVersion;
 	private TextView mTangoEvent;
 	
-	private Button mFirstPersonButton;
-	private Button mThirdPersonButton;
-	private Button mTopDownButton;
 	private Button mMotionReset;
 	private float mPreviousTimeStamp;
 	private int count;
@@ -79,12 +76,12 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 		mPoseCount =(TextView) findViewById(R.id.posecount);
 		mDelta =(TextView) findViewById(R.id.deltatime);
 		mTangoEvent =(TextView) findViewById(R.id.tangoevent);
-		// Buttons for selecting camera view
-		mFirstPersonButton = (Button) findViewById(R.id.first_person_button);
-		mThirdPersonButton = (Button) findViewById(R.id.third_person_button);
-		mTopDownButton = (Button) findViewById(R.id.top_down_button);
+		// Buttons for selecting camera view and Set up button click listeners
+		findViewById(R.id.first_person_button).setOnClickListener(this);
+		findViewById(R.id.third_person_button).setOnClickListener(this);
+		findViewById(R.id.top_down_button).setOnClickListener(this);
 		
-		// Buttons to start and reset motion tracking
+		// Button to reset motion tracking
 		mMotionReset = (Button) findViewById(R.id.resetmotion);
 		
 		// Text views for the status of the pose data and Tango library versions
@@ -96,9 +93,6 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 
 		// Set up button click listeners
 		mMotionReset.setOnClickListener(this);
-		mFirstPersonButton.setOnClickListener(this);
-		mThirdPersonButton.setOnClickListener(this);
-		mTopDownButton.setOnClickListener(this);
 
 		// Configure OpenGL renderer
 		mRenderer = new MTGLRenderer();
