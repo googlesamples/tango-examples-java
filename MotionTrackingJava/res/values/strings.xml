@@ -15,7 +15,7 @@
    limitations under the License.
 -->
 <resources>
-    <string name="app_name">MotionTrackingJava</string>
+    <string name="app_name">Project Tango - MotionTrackingJava</string>
     <string name="vertex_count">Number of Points:</string>
     <string name="serviceversion">Service Version:</string>
     <string name="appversion">App Version:</string>
@@ -29,4 +29,7 @@
     <string name="first_person">First</string>
     <string name="third_person">Third</string>
     <string name="top_down">Top</string>
+    <string name="start">Start</string>
+    <string name="autoreseton">Auto Reset On</string>
+     <string name="autoresetoff">Auto Reset Off</string>
 </resources>

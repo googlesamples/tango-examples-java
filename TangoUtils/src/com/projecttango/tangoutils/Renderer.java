@@ -4,12 +4,18 @@ import android.opengl.Matrix;
 
 public class Renderer {
 	
-	public static final int FIRST_PERSON = 0;
-	public static final int TOP_DOWN = 1;
-	public static final int THIRD_PERSON = 2;
+	protected static final int FIRST_PERSON = 0;
+	protected static final int TOP_DOWN = 1;
+	protected static final int THIRD_PERSON = 2;
+	protected static final int THIRD_PERSON_FOV = 65;
+	protected static final int TOPDOWN_FOV = 65;
+	protected static final int MATRIX_4X4 = 16;
 	
-	private static final int MATRIX_4X4 = 16;
-	
+	protected static final float CAMERA_FOV = 45f;
+	protected static final float CAMERA_NEAR = 0.01f;
+	protected static final float CAMERA_FAR = 200f;
+	protected float mCameraAspect;
+	protected float[] mProjectionMatrix = new float[MATRIX_4X4];
 	private ModelMatCalculator mModelMatCalculator = new ModelMatCalculator();
  	private int viewId = 2;
 	private float[] mViewMatrix = new float[MATRIX_4X4];
@@ -54,14 +60,20 @@ public class Renderer {
 	
 	public void setFirstPersonView(){
 		viewId = FIRST_PERSON;
+		Matrix.perspectiveM(mProjectionMatrix, 0, CAMERA_FOV, mCameraAspect, CAMERA_NEAR, 
+				CAMERA_FAR);
 	}
 	
 	public void setThirdPersonView(){
 		viewId = THIRD_PERSON;
+		Matrix.perspectiveM(mProjectionMatrix, 0, THIRD_PERSON_FOV, mCameraAspect, CAMERA_NEAR, 
+				CAMERA_FAR);
 	}
 	
 	public void setTopDownView(){
 		viewId = TOP_DOWN;
+		Matrix.perspectiveM(mProjectionMatrix, 0, TOPDOWN_FOV, mCameraAspect, CAMERA_NEAR, 
+				CAMERA_FAR);
 	}
 	
 	public void resetModelMatCalculator() {
@@ -74,5 +86,9 @@ public class Renderer {
 	
 	public float[] getViewMatrix() {
 		return mViewMatrix;
+	}
+	
+	public float[] getProjectionMatrix() {
+		return mProjectionMatrix;
 	}
 }

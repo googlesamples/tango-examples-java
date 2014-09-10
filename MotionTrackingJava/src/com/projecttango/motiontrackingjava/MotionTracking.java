@@ -28,6 +28,7 @@ import com.google.atap.tangoservice.Tango.OnTangoUpdateListener;
 import com.google.atap.tangoservice.TangoCoordinateFramePair;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
@@ -70,7 +71,8 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_motion_tracking);
-
+		Intent intent = getIntent();
+		mIsAutoReset = intent.getBooleanExtra("com.projecttango.motiontrackingjava.useautoreset", false);
 		// Text views for displaying translation and rotation data
 		mPose = (TextView) findViewById(R.id.pose);
 		mQuat = (TextView) findViewById(R.id.quat);
@@ -155,7 +157,7 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 						}
 						 mDeltaTime = (float) (pose.timestamp - mPreviousTimeStamp);
 						 mPreviousTimeStamp = (float) pose.timestamp;
-						Log.e("Delta is:",""+mDeltaTime);
+						Log.i("Delta is:",""+mDeltaTime);
 						count++;
 						// Update the OpenGL renderable objects with the new Tango Pose data
 						mRenderer.getTrajectory().updateTrajectory(pose.translation);
