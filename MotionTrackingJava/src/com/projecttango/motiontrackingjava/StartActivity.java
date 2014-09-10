@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ToggleButton;
 
-public class Start extends Activity implements View.OnClickListener{
-	
+public class StartActivity extends Activity implements View.OnClickListener{
+	public static final String KEY_MOTIONTRACKING_AUTORESET = "com.projecttango.motiontrackingjava.useautoreset";
 	private ToggleButton mAutoResetButton;
 	private Button mStartButton;
 	private boolean mUseAutoReset;
@@ -28,7 +28,7 @@ public class Start extends Activity implements View.OnClickListener{
 	public void onClick(View v) {
 		switch(v.getId()){
 		case R.id.startbutton:
-			StartMotionTracking();
+			startMotionTracking();
 			break;
 		case R.id.autoresetbutton:
 			mUseAutoReset = mAutoResetButton.isChecked();
@@ -36,9 +36,9 @@ public class Start extends Activity implements View.OnClickListener{
 		}
 	}
 	
-	private void StartMotionTracking(){
+	private void startMotionTracking(){
 		Intent startmotiontracking = new Intent(this,MotionTracking.class);
-		startmotiontracking.putExtra("com.projecttango.motiontrackingjava.useautoreset",mUseAutoReset);
+		startmotiontracking.putExtra(KEY_MOTIONTRACKING_AUTORESET,mUseAutoReset);
 		startActivity(startmotiontracking);
 	}
 }

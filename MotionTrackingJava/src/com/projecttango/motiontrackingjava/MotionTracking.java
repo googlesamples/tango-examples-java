@@ -72,7 +72,7 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_motion_tracking);
 		Intent intent = getIntent();
-		mIsAutoReset = intent.getBooleanExtra("com.projecttango.motiontrackingjava.useautoreset", false);
+		mIsAutoReset = intent.getBooleanExtra(StartActivity.KEY_MOTIONTRACKING_AUTORESET, false);
 		// Text views for displaying translation and rotation data
 		mPose = (TextView) findViewById(R.id.pose);
 		mQuat = (TextView) findViewById(R.id.quat);
@@ -157,7 +157,7 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 						}
 						 mDeltaTime = (float) (pose.timestamp - mPreviousTimeStamp);
 						 mPreviousTimeStamp = (float) pose.timestamp;
-						Log.i("Delta is:",""+mDeltaTime);
+						Log.i(TAG,"Delta Time is: "+mDeltaTime);
 						count++;
 						// Update the OpenGL renderable objects with the new Tango Pose data
 						mRenderer.getTrajectory().updateTrajectory(pose.translation);
