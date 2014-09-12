@@ -29,7 +29,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.projecttango.areadescriptionjava.AreaDescription"
+            android:name="com.projecttango.areadescriptionjava.ADStartActivity"
             android:label="@string/app_name" 
             android:screenOrientation="landscape">
             <intent-filter>
@@ -37,6 +37,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+       <activity
+            android:name="com.projecttango.areadescriptionjava.AreaDescription"
+            android:label="@string/app_name" 
+            android:screenOrientation="landscape">
         </activity>
     </application>
 

@@ -40,17 +40,11 @@ import android.opengl.Matrix;
  */
 public class ADRenderer extends Renderer implements GLSurfaceView.Renderer {
 	
-	private static final float CAMERA_FOV = 45f;
-	private static final float CAMERA_NEAR = 0.1f;
-	private static final float CAMERA_FAR = 200f;
-	private static final int MATRIX_4X4 = 16;
-	
 	private Trajectory mTrajectory;
 	private CameraFrustum mCameraFrustum;
 	private CameraFrustumAndAxis mCameraFrustumAndAxis;
 	private Grid mFloorGrid;
-	private float mCameraAspect;
-	private float[] mProjectionMatrix = new float[MATRIX_4X4];
+
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -83,7 +77,7 @@ public class ADRenderer extends Renderer implements GLSurfaceView.Renderer {
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		GLES20.glViewport(0, 0, width, height);
 		mCameraAspect = (float) width / height;
-		Matrix.perspectiveM(mProjectionMatrix, 0, CAMERA_FOV, mCameraAspect, CAMERA_NEAR, 
+		Matrix.perspectiveM(mProjectionMatrix, 0, THIRD_PERSON_FOV, mCameraAspect, CAMERA_NEAR, 
 				CAMERA_FAR);
 	}
 
