@@ -76,9 +76,9 @@ public class Renderer  {
 			break;
 		case TOP_DOWN:
 			//Matrix.setIdentityM(mViewMatrix, 0);
-			Matrix.setLookAtM(mViewMatrix, 0, mDevicePosition[0], 5.0f + mDevicePosition[1], 
-					mDevicePosition[2], mDevicePosition[0], mDevicePosition[1], 
-					mDevicePosition[2], 0f, 0f, -1f);
+			Matrix.setLookAtM(mViewMatrix, 0, mDevicePosition[0]+mCameraPosition[0],  mCameraPosition[1], 
+					mCameraPosition[2] + mDevicePosition[2],mDevicePosition[0]+mCameraPosition[0],  mCameraPosition[1] -5, 
+					mCameraPosition[2] + mDevicePosition[2], 0f, 0f, -1f);
 			break;
 		default:
 			viewId = THIRD_PERSON;
@@ -88,68 +88,122 @@ public class Renderer  {
 	
 	public boolean onTouchEvent(MotionEvent event) {   
 		//Log.e("Touched","Touched at :"+ event.getX()+" "+event.getY() );   
-
-		int pointCount = event.getPointerCount();
-		if(pointCount ==1){
-			switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN: {
-					final float x = event.getX();
-					final float y = event.getY();
-					// Remember where we started
-					mPreviousTouchX = x;
-					mPreviousTouchY = y;
-					mPreviousRotationX = mRotationX;
-					mPreviousRotationY = mRotationY;
-					break;
-				}
-				case MotionEvent.ACTION_MOVE: {
-					final float x = event.getX();
-					final float y = event.getY();
-					// Calculate the distance moved
-					final float dx = mPreviousTouchX - x;
-					final float dy = mPreviousTouchY - y;
-					mRotationX = mPreviousRotationX + (float) (Math.PI * dx/1900);
-					mRotationY = mPreviousRotationY + (float) (Math.PI * dy/1200);
-					if(mRotationY >(float) Math.PI)
-						mRotationY = (float) Math.PI;
-					if(mRotationY < 0)
-						mRotationY = 0.0f;
-					mCameraPosition[0] = (float) (mCameraOrbitRadius * Math.sin(mRotationX));
-					mCameraPosition[1] = (float) (mCameraOrbitRadius * Math.cos(mRotationY));
-					mCameraPosition[2] = (float) (mCameraOrbitRadius * Math.cos(mRotationX));
-					break;
+		if(viewId == THIRD_PERSON){
+			int pointCount = event.getPointerCount();
+			if(pointCount ==1){
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN: {
+						final float x = event.getX();
+						final float y = event.getY();
+						// Remember where we started
+						mPreviousTouchX = x;
+						mPreviousTouchY = y;
+						mPreviousRotationX = mRotationX;
+						mPreviousRotationY = mRotationY;
+						break;
+					}
+					case MotionEvent.ACTION_MOVE: {
+						final float x = event.getX();
+						final float y = event.getY();
+						// Calculate the distance moved
+						final float dx = mPreviousTouchX - x;
+						final float dy = mPreviousTouchY - y;
+						mRotationX = mPreviousRotationX + (float) (Math.PI * dx/1900); // ScreenWidth
+						mRotationY = mPreviousRotationY + (float) (Math.PI * dy/1200); // Screen height
+						if(mRotationY >(float) Math.PI)
+							mRotationY = (float) Math.PI;
+						if(mRotationY < 0)
+							mRotationY = 0.0f;
+						mCameraPosition[0] = (float) (mCameraOrbitRadius * Math.sin(mRotationX));
+						mCameraPosition[1] = (float) (mCameraOrbitRadius * Math.cos(mRotationY));
+						mCameraPosition[2] = (float) (mCameraOrbitRadius * Math.cos(mRotationX));
+						break;
+						}
 					}
 				}
+			if(pointCount == 2){
+					switch (event.getActionMasked()) {
+					case MotionEvent.ACTION_DOWN:
+					case MotionEvent.ACTION_POINTER_DOWN: {
+						mTouch1X = event.getX(0);
+						mTouch1Y = event.getY(0);
+						mTouch2X = event.getX(1);
+						mTouch2Y = event.getY(1);
+						mTouchStartDistance =  (float) Math.sqrt(Math.pow(mTouch1X-mTouch2X,2)+Math.pow(mTouch1Y-mTouch2Y,2));
+						mStartCameraRadius =  mCameraOrbitRadius;
+						Log.i("Start Radius is :", "" +mStartCameraRadius);
+						break;
+					}
+					case MotionEvent.ACTION_MOVE: {
+						mTouch1X = event.getX(0);
+						mTouch1Y = event.getY(0);
+						mTouch2X = event.getX(1);
+						mTouch2Y = event.getY(1);
+						mTouchMoveDistance =  (float) Math.sqrt(Math.pow(mTouch1X-mTouch2X,2)+Math.pow(mTouch1Y-mTouch2Y,2));
+						float tmp = 0.05f * (mTouchMoveDistance - mTouchStartDistance);
+						mCameraOrbitRadius = mStartCameraRadius - tmp;
+						if(mCameraOrbitRadius <1)
+							mCameraOrbitRadius = 1;
+						mCameraPosition[0] = (float) (mCameraOrbitRadius * Math.sin(mRotationX));
+						mCameraPosition[1] = (float) (mCameraOrbitRadius * Math.cos(mRotationY));
+						mCameraPosition[2] = (float) (mCameraOrbitRadius * Math.cos(mRotationX));
+						break;
+						}
+					}
+					}
 			}
-		if(pointCount == 2){
-				switch (event.getActionMasked()) {
-				case MotionEvent.ACTION_DOWN:
-				case MotionEvent.ACTION_POINTER_DOWN: {
-					mTouch1X = event.getX(0);
-					mTouch1Y = event.getY(0);
-					mTouch2X = event.getX(1);
-					mTouch2Y = event.getY(1);
-					mTouchStartDistance =  (float) Math.sqrt(Math.pow(mTouch1X-mTouch2X,2)+Math.pow(mTouch1Y-mTouch2Y,2));
-					mStartCameraRadius =  mCameraOrbitRadius;
-					Log.i("Start Radius is :", "" +mStartCameraRadius);
-					break;
-				}
-				case MotionEvent.ACTION_MOVE: {
-					mTouch1X = event.getX(0);
-					mTouch1Y = event.getY(0);
-					mTouch2X = event.getX(1);
-					mTouch2Y = event.getY(1);
-					mTouchMoveDistance =  (float) Math.sqrt(Math.pow(mTouch1X-mTouch2X,2)+Math.pow(mTouch1Y-mTouch2Y,2));
-					float tmp = 0.010f * (mTouchMoveDistance - mTouchStartDistance);
-					mCameraOrbitRadius = mStartCameraRadius + tmp;
-					if(mCameraOrbitRadius <1)
-						mCameraOrbitRadius = 1;
-					mCameraPosition[0] = (float) (mCameraOrbitRadius * Math.sin(mRotationX));
-					mCameraPosition[1] = (float) (mCameraOrbitRadius * Math.cos(mRotationY));
-					mCameraPosition[2] = (float) (mCameraOrbitRadius * Math.cos(mRotationX));
-					break;
+		else if(viewId == TOP_DOWN){
+				int pointCount = event.getPointerCount();
+				if(pointCount ==1){
+					switch (event.getAction()) {
+						case MotionEvent.ACTION_DOWN: {
+							final float x = event.getX();
+							final float y = event.getY();
+							// Remember where we started
+							mPreviousTouchX = x;
+							mPreviousTouchY = y;
+							mPreviousRotationX = mCameraPosition[0];
+							mPreviousRotationY = mCameraPosition[2];
+							break;
+						}
+						case MotionEvent.ACTION_MOVE: {
+							final float x = event.getX();
+							final float y = event.getY();
+							// Calculate the distance moved
+							final float dx = mPreviousTouchX - x;
+							final float dy = mPreviousTouchY - y;
+							mCameraPosition[0] =mPreviousRotationX + dx/190; 
+							mCameraPosition[2] =mPreviousRotationY+ dy/120; 
+							break;
+							}
+						}
 					}
-				}
+				if(pointCount == 2){
+					switch (event.getActionMasked()) {
+					case MotionEvent.ACTION_DOWN:
+					case MotionEvent.ACTION_POINTER_DOWN: {
+						mTouch1X = event.getX(0);
+						mTouch1Y = event.getY(0);
+						mTouch2X = event.getX(1);
+						mTouch2Y = event.getY(1);
+						mTouchStartDistance =  (float) Math.sqrt(Math.pow(mTouch1X-mTouch2X,2)+Math.pow(mTouch1Y-mTouch2Y,2));
+						mStartCameraRadius =  mCameraPosition[1];
+						Log.i("Start Radius is :", "" +mStartCameraRadius);
+						break;
+					}
+					case MotionEvent.ACTION_MOVE: {
+						mTouch1X = event.getX(0);
+						mTouch1Y = event.getY(0);
+						mTouch2X = event.getX(1);
+						mTouch2Y = event.getY(1);
+						mTouchMoveDistance =  (float) Math.sqrt(Math.pow(mTouch1X-mTouch2X,2)+Math.pow(mTouch1Y-mTouch2Y,2));
+						float tmp = 0.05f * (mTouchMoveDistance - mTouchStartDistance);
+						mCameraPosition[1] = mStartCameraRadius - tmp;
+						break;
+						}
+					}
+					}
+				
 				}
 		return true;
 		}
@@ -162,12 +216,18 @@ public class Renderer  {
 	
 	public void setThirdPersonView(){
 		viewId = THIRD_PERSON;
+		mCameraPosition[0] = 5;
+		mCameraPosition[1] = 5;
+		mCameraPosition[2] = 5;
 		Matrix.perspectiveM(mProjectionMatrix, 0, THIRD_PERSON_FOV, mCameraAspect, CAMERA_NEAR, 
 				CAMERA_FAR);
 	}
 	
 	public void setTopDownView(){
 		viewId = TOP_DOWN;
+		mCameraPosition[0] = 0;
+		mCameraPosition[1] = 5;
+		mCameraPosition[2] = 0;
 		Matrix.perspectiveM(mProjectionMatrix, 0, TOPDOWN_FOV, mCameraAspect, CAMERA_NEAR, 
 				CAMERA_FAR);
 	}

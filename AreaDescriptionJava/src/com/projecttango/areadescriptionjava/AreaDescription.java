@@ -326,7 +326,6 @@ public class AreaDescription extends Activity implements View.OnClickListener {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		return mRenderer.onTouchEvent(event);  
-		
 		}
 
 }
