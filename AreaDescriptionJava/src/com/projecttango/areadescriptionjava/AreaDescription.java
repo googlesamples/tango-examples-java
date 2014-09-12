@@ -31,6 +31,7 @@ import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -321,5 +322,11 @@ public class AreaDescription extends Activity implements View.OnClickListener {
 			return;
 		}
 	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		return mRenderer.onTouchEvent(event);  
+		
+		}
 
 }

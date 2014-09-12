@@ -40,11 +40,6 @@ import android.opengl.Matrix;
  */
 public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
 	
-	private static final float CAMERA_FOV = 45f;
-	private static final float CAMERA_NEAR = 0.01f;
-	private static final float CAMERA_FAR = 200f;
-	private static final int MATRIX_4X4 = 16;
-	
 	private Trajectory mTrajectory;
 	private CameraFrustum mCameraFrustum;
 	private CameraFrustumAndAxis mCameraFrustumAndAxis;
@@ -59,11 +54,20 @@ public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 		
 		resetModelMatCalculator();
+		String vertexShaderCode =	"uniform mat4 uMVPMatrix;" 
+				+"attribute vec4 vPosition;" 
+				+"void main() {" 
+				+"gl_Position = uMVPMatrix * vPosition;" 
+				+"}";
+		String blueFragshaderCode = "precision mediump float;"
+				+ "uniform vec4 vColor;" 
+				+ "void main() {"
+				+ " gl_FragColor = vec4(0.0,0.0,0.5,1.0);" 
+				+ "}";
 		mCameraFrustum = new CameraFrustum();
 		mFloorGrid = new Grid();
 		mCameraFrustumAndAxis = new CameraFrustumAndAxis();
-		mTrajectory = new Trajectory();
-		
+		mTrajectory = new Trajectory(vertexShaderCode,blueFragshaderCode,2);
 		// Construct the initial view matrix
 		Matrix.setIdentityM(getViewMatrix(), 0);
 		Matrix.setLookAtM(getViewMatrix(), 0, 0, 5f, 5f, 0f, 0f, 0f, 0f, 1f, 0f);

@@ -59,10 +59,20 @@ public class ADRenderer extends Renderer implements GLSurfaceView.Renderer {
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 		
 		resetModelMatCalculator();
+		String vertexShaderCode =	"uniform mat4 uMVPMatrix;" 
+				+"attribute vec4 vPosition;" 
+				+"void main() {" 
+				+"gl_Position = uMVPMatrix * vPosition;" 
+				+"}";
+		String blueFragshaderCode = "precision mediump float;"
+				+ "uniform vec4 vColor;" 
+				+ "void main() {"
+				+ " gl_FragColor = vec4(0.0,0.08,0.3,1.0);" 
+				+ "}";
 		mCameraFrustum = new CameraFrustum();
 		mFloorGrid = new Grid();
 		mCameraFrustumAndAxis = new CameraFrustumAndAxis();
-		mTrajectory = new Trajectory();
+		mTrajectory = new Trajectory(vertexShaderCode,blueFragshaderCode,2);
 		
 		// Construct the initial view matrix
 		Matrix.setIdentityM(getViewMatrix(), 0);

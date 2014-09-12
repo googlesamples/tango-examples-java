@@ -32,6 +32,7 @@ import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 	private boolean mIsAutoReset;
 	private MTGLRenderer mRenderer;
 	private GLSurfaceView mGLView;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +153,7 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 						}
 						 mDeltaTime = (float) (pose.timestamp - mPreviousTimeStamp);
 						 mPreviousTimeStamp = (float) pose.timestamp;
-						Log.i(TAG,"Delta Time is: "+mDeltaTime);
+						//Log.i(TAG,"Delta Time is: "+mDeltaTime);
 						count++;
 						// Update the OpenGL renderable objects with the new Tango Pose data
 						mRenderer.getTrajectory().updateTrajectory(pose.translation);
@@ -253,4 +255,10 @@ public class MotionTracking extends Activity implements View.OnClickListener {
 			return;
 		}
 	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		return mRenderer.onTouchEvent(event);  
+		
+		}
 }
