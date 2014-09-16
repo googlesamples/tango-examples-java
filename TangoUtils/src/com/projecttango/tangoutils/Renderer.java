@@ -35,6 +35,7 @@ public class Renderer  {
 	private float mTouch1X,mTouch2X,mTouch1Y,mTouch2Y, mTouchStartDistance, mTouchMoveDistance,mStartCameraRadius;
 	
 	public Renderer(){
+		mModelMatCalculator = new ModelMatCalculator();
 		mRotationX = (float) Math.PI/4;
 		mRotationY = 0;
 		mCameraOrbitRadius = 5.0f;
