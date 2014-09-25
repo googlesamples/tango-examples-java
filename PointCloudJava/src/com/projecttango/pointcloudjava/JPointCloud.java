@@ -16,6 +16,8 @@
 
 package com.projecttango.pointcloudjava;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -31,6 +33,7 @@ import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -90,7 +93,6 @@ public class JPointCloud extends Activity implements OnClickListener {
         mTango = new Tango(this);
         mConfig = new TangoConfig();
         mTango.getConfig(TangoConfig.CONFIG_TYPE_CURRENT, mConfig);
-		mConfig.putBoolean(TangoConfig.KEY_BOOLEAN_MOTIONTRACKING, false);
         mConfig.putBoolean(TangoConfig.KEY_BOOLEAN_DEPTH, true);
         
     	// Display the version of Tango Service
@@ -108,6 +110,10 @@ public class JPointCloud extends Activity implements OnClickListener {
         	@Override
         	public void onPoseAvailable(final TangoPoseData pose) {
         		// Ignoring pose data
+        		  mRenderer.getTrajectory().updateTrajectory(pose.translation);
+        		  mRenderer.getModelMatCalculator().updateModelMatrix(pose.translation, pose.rotation);     
+        		  mRenderer.updateViewMatrix();
+        		  mGLView.requestRender();
         	}
 
 			@Override
@@ -118,10 +124,20 @@ public class JPointCloud extends Activity implements OnClickListener {
             		if(mPreviousTimeStamp==0){
             			mPreviousTimeStamp = mCurrentTimeStamp;
             		}
-            		mRenderer.getPointCloud().updatePoints(xyzIj.getXyzBuffer());
-            		mGLView.requestRender();
+
+    				byte[] buffer = new byte[xyzIj.xyzParcelFileDescriptorSize];
+                	FileInputStream fileStream = new FileInputStream(
+                    xyzIj.xyzParcelFileDescriptor.getFileDescriptor());
+                	try {
+                		fileStream.read(buffer, xyzIj.xyzParcelFileDescriptorOffset,
+                        xyzIj.xyzParcelFileDescriptorSize);
+                		fileStream.close();
+                		} catch (IOException e) {
+                		e.printStackTrace();
+                		}
+                mRenderer.getPointCloud().UpdatePoints(buffer);
+            	mRenderer.getPointCloud().setModelMatrix(mRenderer.getModelMatCalculator().getModelMatrix());
             	
-            
             	// Must run UI changes on the UI thread.  Running in the Tango service thread
             	//	will result in an error.
             	runOnUiThread(new Runnable() {
@@ -185,5 +201,9 @@ public class JPointCloud extends Activity implements OnClickListener {
 			return;
 		}
 	}
-
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		return mRenderer.onTouchEvent(event);  
+		}
 }

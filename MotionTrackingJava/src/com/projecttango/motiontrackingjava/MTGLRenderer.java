@@ -25,6 +25,7 @@ import com.projecttango.tangoutils.renderables.CameraFrustum;
 import com.projecttango.tangoutils.renderables.Grid;
 import com.projecttango.tangoutils.renderables.Trajectory;
 
+import android.R;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -40,40 +41,42 @@ import android.opengl.Matrix;
  */
 public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
 	
-	private static final float CAMERA_FOV = 45f;
-	private static final float CAMERA_NEAR = 0.01f;
-	private static final float CAMERA_FAR = 200f;
-	private static final int MATRIX_4X4 = 16;
-	
 	private Trajectory mTrajectory;
 	private CameraFrustum mCameraFrustum;
 	private CameraFrustumAndAxis mCameraFrustumAndAxis;
 	private Grid mFloorGrid;
-	private float mCameraAspect;
-	private float[] mProjectionMatrix = new float[MATRIX_4X4];
-
+	
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+		
 		// Set background color and enable depth testing
 		GLES20.glClearColor(1f, 1f, 1f, 1.0f);
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-		
+		String vertexShaderCode =	"uniform mat4 uMVPMatrix;" 
+				+"attribute vec4 vPosition;" 
+				+"void main() {" 
+				+"gl_Position = uMVPMatrix * vPosition;" 
+				+"}";
+		String blueFragshaderCode = "precision mediump float;"
+				+ "uniform vec4 vColor;" 
+				+ "void main() {"
+				+ " gl_FragColor = vec4(0.0,0.0,0.5,1.0);" 
+				+ "}";
 		resetModelMatCalculator();
 		mCameraFrustum = new CameraFrustum();
 		mFloorGrid = new Grid();
 		mCameraFrustumAndAxis = new CameraFrustumAndAxis();
-		mTrajectory = new Trajectory();
+		mTrajectory = new Trajectory(vertexShaderCode,blueFragshaderCode,2);
 		
 		// Construct the initial view matrix
 		Matrix.setIdentityM(getViewMatrix(), 0);
-		Matrix.setLookAtM(getViewMatrix(), 0, 0, 5f, 5f, 0f, 0f, 0f, 0f, 1f, 0f);
 	}
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		GLES20.glViewport(0, 0, width, height);
 		mCameraAspect = (float) width / height;
-		Matrix.perspectiveM(mProjectionMatrix, 0, CAMERA_FOV, mCameraAspect, CAMERA_NEAR, 
+		Matrix.perspectiveM(mProjectionMatrix, 0, THIRD_PERSON_FOV, mCameraAspect, CAMERA_NEAR, 
 				CAMERA_FAR);
 	}
 
@@ -98,5 +101,5 @@ public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
 	public Trajectory getTrajectory() {
 		return mTrajectory;
 	}
-	
+
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ToggleButton
+        android:id="@+id/loadadf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:textOn="Load ADF On"
+        android:textOff="Load ADF Off" />
+
+    <ToggleButton
+        android:id="@+id/learningmode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="Learning Mode On"
+        android:textOff="Learning Mode Off" />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start with this config" />
+
+</LinearLayout>

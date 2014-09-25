@@ -40,26 +40,12 @@ public class Trajectory extends Renderable {
 	
 	private static final String TAG = Trajectory.class.getSimpleName();
 	
-	private static final String sVertexShaderCode = 
-			"uniform mat4 uMVPMatrix;" 
-			+"attribute vec4 vPosition;" 
-			+"void main() {" 
-			+"gl_Position = uMVPMatrix * vPosition;" 
-			+"}";
-	
-	private static final String sFragmentShaderCode = 
-			"precision mediump float;"
-			+ "uniform vec4 vColor;" 
-			+ "void main() {"
-			+ " gl_FragColor = vec4(1.0,0.5,0.5,1.0);" 
-			+ "}";
-
 	private FloatBuffer mVertexBuffer;
 	private final int mProgram;
 	private int mPosHandle;
 	private int mMVPMatrixHandle;
-
-	public Trajectory() {
+	private int mLineWidth;
+	public Trajectory(String vertexShaderCode,String fragmentShaderCode, int lineWidth) {
 		// Reset the model matrix to the identity
 		Matrix.setIdentityM(getModelMatrix(), 0);
 		
@@ -70,8 +56,8 @@ public class Trajectory extends Renderable {
 		mVertexBuffer = vertexByteBuffer.asFloatBuffer();
 
 		// Load the vertex and fragment shaders, then link the program
-		int vertexShader = RenderUtils.loadShader(GLES20.GL_VERTEX_SHADER, sVertexShaderCode);
-		int fragShader = RenderUtils.loadShader(GLES20.GL_FRAGMENT_SHADER, sFragmentShaderCode);
+		int vertexShader = RenderUtils.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+		int fragShader = RenderUtils.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 		mProgram = GLES20.glCreateProgram();
 		GLES20.glAttachShader(mProgram, vertexShader);
 		GLES20.glAttachShader(mProgram, fragShader);
@@ -119,7 +105,7 @@ public class Trajectory extends Renderable {
 		// Draw the Grid
 		mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
 		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, getMvpMatrix(), 0);
-		GLES20.glLineWidth(1);
+		GLES20.glLineWidth(mLineWidth);
 		GLES20.glDrawArrays(GLES20.GL_LINE_STRIP, 0, mTrajectoryCount);
 	}	
 
