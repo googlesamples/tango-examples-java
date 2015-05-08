@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2014 Google Inc. All Rights Reserved.
+  Distributed under the Project Tango Preview Development Kit (PDK) Agreement.
+  CONFIDENTIAL. AUTHORIZED USE ONLY. DO NOT REDISTRIBUTE.
+-->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:background="@drawable/exception_container_shadow" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/exception_component_height"
+        android:background="@android:color/white"
+        android:orientation="horizontal" >
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/text_exception_action_required" />
+
+        <ImageView
+            android:id="@+id/exception_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="11dp" />
+
+        <TextView
+            android:id="@+id/exception_title"
+            style="@style/ExceptionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/exception_description"
+            style="@style/ExceptionDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="18dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1" />
+
+        <TextView
+            style="@style/ExceptionActionRequired"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/action_required" />
+
+        <com.google.atap.tango.ux.ExceptionStatusComponent
+            android:id="@+id/exception_status"
+            android:layout_width="@dimen/exception_status_component_size"
+            android:layout_height="@dimen/exception_status_component_size"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="16dp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/text_exception_action_required" />
+    </LinearLayout>
+
+</FrameLayout>

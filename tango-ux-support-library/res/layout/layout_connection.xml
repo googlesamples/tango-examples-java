@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2014 Google Inc. All Rights Reserved.
+  Distributed under the Project Tango Preview Development Kit (PDK) Agreement.
+  CONFIDENTIAL. AUTHORIZED USE ONLY. DO NOT REDISTRIBUTE.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_shake_background" />
+
+        <FrameLayout
+            android:id="@+id/group_shake_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal" >
+
+            <com.google.atap.tango.ux.ConnectionLayoutTick
+                android:id="@+id/image_shake_ok_tick"
+                android:layout_width="@dimen/shake_ok_tick_width"
+                android:layout_height="@dimen/shake_ok_tick_height"
+                android:translationX="@dimen/shake_ok_tick_translation_x"
+                android:translationY="@dimen/shake_ok_tick_translation_y" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shake_ok" />
+
+            <ImageView
+                android:id="@+id/image_shake_err"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shake_err" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/connection_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <com.google.atap.tango.ux.ConnectionLayoutProgressBar
+            android:layout_width="350dp"
+            android:layout_height="2.5dp"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            style="@style/ConnectionLayoutText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/connection_layout_message"
+            android:textAllCaps="true" />
+
+        <TextView
+            style="@style/ConnectionLayoutSubtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/connection_layout_description" />
+    </LinearLayout>
+
+</LinearLayout>
