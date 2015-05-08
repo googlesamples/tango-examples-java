@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2014 Google Inc. All Rights Reserved.
+  Distributed under the Project Tango Preview Development Kit (PDK) Agreement.
+  CONFIDENTIAL. AUTHORIZED USE ONLY. DO NOT REDISTRIBUTE.
+-->
+<resources>
+
+    <dimen name="connection_progress_bar_sub_margin">4dp</dimen>
+    
+    <dimen name="exception_component_height">58dp</dimen>
+    <dimen name="exception_status_component_size">30dp</dimen>
+    
+    <dimen name="shake_ok_tick_width">41.5dp</dimen>
+    <dimen name="shake_ok_tick_height">15.5dp</dimen>
+    <dimen name="shake_ok_tick_translation_x">82.5dp</dimen>
+    <dimen name="shake_ok_tick_translation_y">30.5dp</dimen>
+
+</resources>

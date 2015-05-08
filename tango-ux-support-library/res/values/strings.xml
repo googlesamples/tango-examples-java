@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2014 Google Inc. All Rights Reserved.
+  Distributed under the Project Tango Preview Development Kit (PDK) Agreement.
+  CONFIDENTIAL. AUTHORIZED USE ONLY. DO NOT REDISTRIBUTE.
+-->
+<resources>
+
+    <!-- Splash Component -->
+    <string name="project_tango">Project Tango</string>
+    
+    <!-- Exceptions -->
+    <string name="moving_too_fast_title">Too fast.</string>
+    <string name="moving_too_fast_description">Slow down and hold device steady.</string>
+
+    <string name="unable_to_detect_surface_title">Few depth points.</string>
+    <string name="unable_to_detect_surface_description">Keep objects to be scanned in the range of 0.5 &#8211; 4 meters.</string>
+    
+	<string name="space_not_recognized_title">Space not recognized.</string>
+    <string name="space_not_recognized_description">Avoid pointing at environments with few features.</string>
+    
+    <string name="not_enough_light_title">Not enough light.</string>
+    <string name="not_enough_light_description">Make sure nothing is blocking camera or light.</string>
+    
+    <string name="too_much_light_title">Too much light.</string>
+    <string name="too_much_light_description">Avoid pointing at bright lights.</string>
+    
+    <string name="device_not_responding_title">Tango Service Crash.</string>
+    <string name="device_not_responding_description">Exit the application or reboot your device.</string>
+    
+    <string name="service_updated_title">Library Mismatch.</string>
+    <string name="service_updated_description">Update your Tango Service to the latest version.</string>
+
+    <string name="lying_on_surface_title">Lying on surface.</string>
+    <string name="lying_on_surface_description">Pick up the device to continue.</string>
+    
+	<string name="motion_track_title">Motion Tracking lost.</string>
+    <string name="motion_track_description">Hold steady and wait for system to recover.</string>
+    
+	<string name="run_time_mismatch_title">Runtime Mismatch.</string>
+    <string name="run_time_mismatch_description">Go to system setting and use ART as runtime.</string>
+
+    <string name="action_required">Action required</string>
+    
+    <!-- Connection Layout -->
+    <string name="connection_layout_message">Connecting</string>
+    <string name="connection_layout_description">Please hold steady</string>
+
+</resources>

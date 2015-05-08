@@ -16,6 +16,9 @@
 
 package com.projecttango.experiments.javapointcloud;
 
+import com.google.atap.tango.ux.TangoUx;
+import com.google.atap.tango.ux.TangoUxLayout;
+import com.google.atap.tango.ux.listeners.UxExceptionListener;
 import com.google.atap.tangoservice.Tango;
 import com.google.atap.tangoservice.Tango.OnTangoUpdateListener;
 import com.google.atap.tangoservice.TangoConfig;
@@ -29,6 +32,7 @@ import com.google.atap.tangoservice.TangoXyzIjData;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.opengl.GLSurfaceView;
@@ -92,6 +96,9 @@ public class PointCloudActivity extends Activity implements OnClickListener {
     public static Object poseLock = new Object();
     public static Object depthLock = new Object();
 
+    private TangoUx mTangoUx;
+    private TangoUxLayout mTangoUxLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,8 +123,12 @@ public class PointCloudActivity extends Activity implements OnClickListener {
         mThirdPersonButton.setOnClickListener(this);
         mTopDownButton = (Button) findViewById(R.id.top_down_button);
         mTopDownButton.setOnClickListener(this);
-
+        mTangoUx = new TangoUx(this);
         mTango = new Tango(this);
+
+        mTangoUxLayout = (TangoUxLayout) findViewById(R.id.layout_tango_ux);
+        mTangoUx.setUxTangoLayout(mTangoUxLayout);
+
         mConfig = new TangoConfig();
         mConfig = mTango.getConfig(TangoConfig.CONFIG_TYPE_CURRENT);
         mConfig.putBoolean(TangoConfig.KEY_BOOLEAN_DEPTH, true);
@@ -135,7 +146,7 @@ public class PointCloudActivity extends Activity implements OnClickListener {
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-
+        
         // Display the version of Tango Service
         mServiceVersion = mConfig.getString("tango_service_library_version");
         mTangoServiceVersionTextView.setText(mServiceVersion);
@@ -143,10 +154,69 @@ public class PointCloudActivity extends Activity implements OnClickListener {
         startUIThread();
     }
 
+    /*
+     * Use this to listen to all the UX Exceptions received from the UX library. In this example we
+     * are just logging all the ux exceptions to logcat, but in a real app, developers should use
+     * these exceptions to contextually notify the user and help direct using the device in a way
+     * Tango service expects it.
+     */
+    private UxExceptionListener mUxExceptionListener = new UxExceptionListener() {
+        @Override
+        public void onCameraOverExposed(String exposure) {
+            Log.i(TAG, "Camera Over Exposed, Exposure value is: " + exposure);
+        }
+
+        @Override
+        public void onCameraUnderExposed(String exposure) {
+            Log.i(TAG, "Camera Under Exposed, Exposure value is: " + exposure);
+        }
+
+        @Override
+        public void onTangoServiceNotResponding() {
+            Log.i(TAG, "Tango Service not responding ");
+        }
+
+        @Override
+        public void onMovingTooFast(String movement) {
+            Log.i(TAG, "Device moving too fast: " + movement);
+        }
+
+        @Override
+        public void onTooFewFeatures(String features) {
+            Log.i(TAG, "Very few features are being tracked. No of features: " + features);
+        }
+
+        @Override
+        public void onTooFewDepthPoints(String points) {
+            Log.i(TAG, "Very few depth points in point cloud: " + points);
+        }
+
+        @Override
+        public void onLyingOnSurface(String value) {
+            Log.i(TAG, "Device lying on surface: " + value);
+        }
+
+        @Override
+        public void onMotionTrackingInvalid(String value) {
+            Log.i(TAG, "Invalid poses in MotionTracking " + value);
+        }
+
+        @Override
+        public void onVersionUpdateNeeded() {
+            Log.i(TAG, "Client/Service mismatch");
+        }
+
+        @Override
+        public void onIncompatibleVMFound() {
+            Log.i(TAG, "Device not running on ART");
+        }
+    };
+
     @Override
     protected void onPause() {
         super.onPause();
         try {
+            mTangoUx.stop();
             mTango.disconnect();
             mIsTangoServiceConnected = false;
         } catch (TangoErrorException e) {
@@ -178,6 +248,7 @@ public class PointCloudActivity extends Activity implements OnClickListener {
             }
             try {
                 setTangoListeners();
+                mTangoUx.setUxExceptionListener(mUxExceptionListener);
             } catch (TangoErrorException e) {
                 Toast.makeText(this, R.string.TangoError, Toast.LENGTH_SHORT).show();
             } catch (SecurityException e) {
@@ -185,6 +256,7 @@ public class PointCloudActivity extends Activity implements OnClickListener {
                         Toast.LENGTH_SHORT).show();
             }
             try {
+                mTangoUx.start();
                 mTango.connect(mConfig);
                 mIsTangoServiceConnected = true;
             } catch (TangoOutOfDateException e) {
@@ -265,6 +337,11 @@ public class PointCloudActivity extends Activity implements OnClickListener {
 
             @Override
             public void onPoseAvailable(final TangoPoseData pose) {
+                // Passing in the pose data to UX library produce exceptions.
+                if (mTangoUx != null) {
+                    mTangoUx.onPoseAvailable(pose);
+                }
+
                 // Make sure to have atomic access to Tango Pose Data so that
                 // render loop doesn't interfere while Pose call back is updating
                 // the data.
@@ -279,6 +356,9 @@ public class PointCloudActivity extends Activity implements OnClickListener {
                     }
                     count++;
                     mPreviousPoseStatus = pose.statusCode;
+                    if(!mRenderer.isValid()){
+                        return;
+                    }
                     mRenderer.getModelMatCalculator().updateModelMatrix(
                             pose.getTranslationAsFloats(), pose.getRotationAsFloats());
                     mRenderer.updateViewMatrix();
@@ -287,6 +367,12 @@ public class PointCloudActivity extends Activity implements OnClickListener {
 
             @Override
             public void onXyzIjAvailable(final TangoXyzIjData xyzIj) {
+                
+                // Passing in the xyzIj object to UX library to produce exceptions.
+                if (mTangoUx != null) {
+                    mTangoUx.onXyzIjAvailable(xyzIj);
+                }
+
                 // Make sure to have atomic access to TangoXyzIjData so that
                 // render loop doesn't interfere while onXYZijAvailable callback is updating
                 // the point cloud data.
@@ -295,22 +381,14 @@ public class PointCloudActivity extends Activity implements OnClickListener {
                     mPointCloudFrameDelta = (mCurrentTimeStamp - mXyIjPreviousTimeStamp)
                             * SECS_TO_MILLISECS;
                     mXyIjPreviousTimeStamp = mCurrentTimeStamp;
-                    mPointCount = xyzIj.xyzCount;
-                    byte[] buffer = new byte[xyzIj.xyzCount * 3 * 4];
-                    // TODO: Use getXYZBuffer() call instead of parcel file directly.
-                    FileInputStream fileStream = new FileInputStream(xyzIj.xyzParcelFileDescriptor
-                            .getFileDescriptor());
-                    try {
-                        fileStream.read(buffer, xyzIj.xyzParcelFileDescriptorOffset, buffer.length);
-                        fileStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                     try {
                         TangoPoseData pointCloudPose = mTango.getPoseAtTime(mCurrentTimeStamp,
                                 framePairs.get(0));
-
-                        mRenderer.getPointCloud().UpdatePoints(buffer, xyzIj.xyzCount);
+                        mPointCount = xyzIj.xyzCount;
+                        if(!mRenderer.isValid()){
+                            return;
+                        }
+                        mRenderer.getPointCloud().UpdatePoints(xyzIj.xyz);
                         mRenderer.getModelMatCalculator().updatePointCloudModelMatrix(
                                 pointCloudPose.getTranslationAsFloats(),
                                 pointCloudPose.getRotationAsFloats());
@@ -328,6 +406,11 @@ public class PointCloudActivity extends Activity implements OnClickListener {
 
             @Override
             public void onTangoEvent(final TangoEvent event) {
+                // Passing in TangoEvent data to UX library to produce UX Exceptions.
+                if (mTangoUx != null) {
+                    mTangoUx.onTangoEvent(event);
+                }
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

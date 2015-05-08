@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2014 Google Inc. All Rights Reserved.
+  Distributed under the Project Tango Preview Development Kit (PDK) Agreement.
+  CONFIDENTIAL. AUTHORIZED USE ONLY. DO NOT REDISTRIBUTE.
+-->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Splash Screen -->
+    <style name="Text40GrayDarkThin">
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textColor">@color/gray_dark</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="Text20GrayDarkLight">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/gray_dark</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Connection Layout -->
+    <style name="ConnectionLayoutText">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/gray_dark</item>
+        <item name="android:textSize">21sp</item>
+    </style>
+    
+    <style name="ConnectionLayoutSubtext">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/gray_dark</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    
+  <!-- Exceptions -->
+    <style name="ExceptionTitle">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ExceptionDescription">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/text_exception_description</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ExceptionActionRequired">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/text_exception_action_required</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <!-- Adf List -->
+    <style name="TextListTitle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">#FFFFFF</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:gravity">center_vertical|left</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+    </style>
+
+    <style name="TextListTitleItem">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextListContentItem">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">#999999</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+</resources>
