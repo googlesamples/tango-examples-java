@@ -1,0 +1,30 @@
+apply plugin: 'android'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+        applicationId "com.projecttango.experiments.videooverlaysample"
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile "AndroidManifest.xml"
+            java.srcDirs = ['src']
+            resources.srcDirs = ['res']
+            res.srcDirs = ['res']
+        }
+    }
+
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':TangoUtils')
+}
