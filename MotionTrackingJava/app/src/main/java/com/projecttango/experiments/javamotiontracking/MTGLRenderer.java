@@ -29,6 +29,9 @@ import com.projecttango.tangoutils.renderables.CameraFrustumAndAxis;
 import com.projecttango.tangoutils.renderables.Grid;
 import com.projecttango.tangoutils.renderables.Trajectory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * OpenGL rendering class for the Motion Tracking API sample. This class managers the objects
  * visible in the OpenGL view which are the {@link CameraFrustum}, {@link CameraFrustumAndAxis},
@@ -45,6 +48,9 @@ public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
     private CameraFrustumAndAxis mCameraFrustumAndAxis;
     private Grid mFloorGrid;
     private boolean mIsValid = false;
+    private List<Trajectory> mObjectTrajectories = new ArrayList<Trajectory>();
+    private Object trajectoryLock = new Object();
+
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
@@ -81,6 +87,10 @@ public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
             mTrajectory.draw(getViewMatrix(), mProjectionMatrix);
             mFloorGrid.draw(getViewMatrix(), mProjectionMatrix);
             mCameraFrustumAndAxis.draw(getViewMatrix(), mProjectionMatrix);
+
+            for (Trajectory trajectory : mObjectTrajectories) {
+                trajectory.draw(getViewMatrix(), mProjectionMatrix);
+            }
         }
         updateViewMatrix();
     }
@@ -91,6 +101,19 @@ public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
 
     public CameraFrustumAndAxis getCameraFrustumAndAxis() {
         return mCameraFrustumAndAxis;
+    }
+
+    public int createObjectTrajectory() {
+        synchronized(trajectoryLock) {
+            final Trajectory trajectory = new Trajectory(3);
+            mObjectTrajectories.add(trajectory);
+
+            return mObjectTrajectories.size() - 1;
+        }
+    }
+
+    public Trajectory getObjectTrajectory(int id) {
+        return mObjectTrajectories.get(id);
     }
 
     public Trajectory getTrajectory() {
