@@ -16,16 +16,6 @@
 
 package com.projecttango.experiments.javamotiontracking;
 
-import com.google.atap.tangoservice.Tango;
-import com.google.atap.tangoservice.Tango.OnTangoUpdateListener;
-import com.google.atap.tangoservice.TangoConfig;
-import com.google.atap.tangoservice.TangoCoordinateFramePair;
-import com.google.atap.tangoservice.TangoErrorException;
-import com.google.atap.tangoservice.TangoEvent;
-import com.google.atap.tangoservice.TangoOutOfDateException;
-import com.google.atap.tangoservice.TangoPoseData;
-import com.google.atap.tangoservice.TangoXyzIjData;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -39,8 +29,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.atap.tangoservice.Tango;
+import com.google.atap.tangoservice.Tango.OnTangoUpdateListener;
+import com.google.atap.tangoservice.TangoConfig;
+import com.google.atap.tangoservice.TangoCoordinateFramePair;
+import com.google.atap.tangoservice.TangoErrorException;
+import com.google.atap.tangoservice.TangoEvent;
+import com.google.atap.tangoservice.TangoOutOfDateException;
+import com.google.atap.tangoservice.TangoPoseData;
+import com.google.atap.tangoservice.TangoXyzIjData;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 /**
  * Main Activity class for the Motion Tracking API Sample. Handles the connection to the Tango
@@ -73,6 +76,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     private TangoPoseData mPose;
     private static final int UPDATE_INTERVAL_MS = 100;
     public static Object sharedLock = new Object();
+    private double x, y, z;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,12 +182,25 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
                     // Update the OpenGL renderable objects with the new Tango Pose
                     // data
                     float[] translation = pose.getTranslationAsFloats();
-                    if(!mRenderer.isValid()){
+                    if (!mRenderer.isValid()) {
                         return;
                     }
                     mRenderer.getTrajectory().updateTrajectory(translation);
                     mRenderer.getModelMatCalculator().updateModelMatrix(translation,
                             pose.getRotationAsFloats());
+
+                    final float[] rot = pose.getRotationAsFloats();
+
+                    final double[] euler = getEulerFromQuat(rot[0], rot[1], rot[2], rot[3]);
+
+                    Log.d(TAG, " " + euler[0] + " " + euler[1] + " " + euler[2]);
+
+                    double yaw = euler[0];
+                    double pitch = euler[2];
+
+                    x = cos(yaw) * cos(pitch);
+                    y = sin(yaw) * cos(pitch);
+                    z = sin(pitch);
                 }
             }
 
@@ -259,21 +276,21 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-        case R.id.first_person_button:
-            mRenderer.setFirstPersonView();
-            break;
-        case R.id.top_down_button:
-            mRenderer.setTopDownView();
-            break;
-        case R.id.third_person_button:
-            mRenderer.setThirdPersonView();
-            break;
-        case R.id.resetmotion:
-            motionReset();
-            break;
-        default:
-            Log.w(TAG, "Unknown button click");
-            return;
+            case R.id.first_person_button:
+                mRenderer.setFirstPersonView();
+                break;
+            case R.id.top_down_button:
+                mRenderer.setTopDownView();
+                break;
+            case R.id.third_person_button:
+                mRenderer.setThirdPersonView();
+                break;
+            case R.id.resetmotion:
+                motionReset();
+                break;
+            default:
+                Log.w(TAG, "Unknown button click");
+                return;
         }
     }
 
@@ -281,7 +298,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     public boolean onTouchEvent(MotionEvent event) {
         return mRenderer.onTouchEvent(event);
     }
-    
+
     /**
      * Setup the extrinsics of the device.
      */
@@ -304,6 +321,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         mRenderer.getModelMatCalculator().SetColorCamera2IMUMatrix(
                 color2IMUPose.getTranslationAsFloats(), color2IMUPose.getRotationAsFloats());
     }
+
     /**
      * Create a separate thread to update Log information on UI at the specified
      * interval of UPDATE_INTERVAL_MS. This function also makes sure to have access
@@ -312,6 +330,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     private void startUIThread() {
         new Thread(new Runnable() {
             DecimalFormat threeDec = new DecimalFormat("00.000");
+
             @Override
             public void run() {
                 while (true) {
@@ -325,7 +344,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
                                         if (mPose == null) {
                                             return;
                                         }
-                                       
+
                                         String translationString = "["
                                                 + threeDec.format(mPose.translation[0]) + ", "
                                                 + threeDec.format(mPose.translation[1]) + ", "
@@ -363,5 +382,34 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
                 }
             }
         }).start();
+    }
+
+
+    static double[] getEulerFromQuat(float x, float y, float z, float w) {
+        double limit = 0.499999;
+        double sqx = x * x;
+        double sqy = y * y;
+        double sqz = z * z;
+        double t = x * y + z * w;
+
+        double heading, attitude, bank;
+
+        if (t > limit) // gimbal lock ?
+        {
+            heading = 2 * Math.atan2(x, w);
+            attitude = Math.PI / 2;
+            bank = 0;
+        } else if (t < -limit) {
+            heading = -2 * Math.atan2(x, w);
+            attitude = -Math.PI / 2;
+            bank = 0;
+        } else {
+            heading = Math.atan2(2 * y * w - 2 * x * z, 1 - 2 * sqy - 2 * sqz);
+            attitude = Math.asin(2 * t);
+            bank = Math.atan2(2 * x * w - 2 * y * z, 1 - 2 * sqx - 2 * sqz);
+        }
+
+        double euler[] = {heading, attitude, bank};
+        return euler;
     }
 }
