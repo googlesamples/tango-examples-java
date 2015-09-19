@@ -44,7 +44,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static java.lang.Math.cos;
-import static java.lang.Math.random;
 import static java.lang.Math.sin;
 
 /**
@@ -155,13 +154,9 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         // Display the library version for debug purposes
         mTangoServiceVersionTextView.setText(mConfig.getString("tango_service_library_version"));
 
-
-        starSystem = new StarSystem();
-
-        starSystem.addStar( new Position(0,0,0));
-        starSystem.addPlanet(27, new Position(10, 0, 0), new Vector(0, 10, 0));
-
-
+        synchronized (sharedLock) {
+            starSystem = new StarSystem();
+        }
         startUIThread();
         new StarSystemThread().start();
     }
@@ -212,7 +207,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
 
                     final double[] euler = getEulerFromQuat(rot[0], rot[1], rot[2], rot[3]);
 
-                    Log.d(TAG, " " + euler[0] + " " + euler[1] + " " + euler[2]);
+//                    Log.d(TAG, " " + euler[0] + " " + euler[1] + " " + euler[2]);
 
                     double yaw = euler[0];
                     double pitch = euler[2];
@@ -317,13 +312,16 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
             mRenderer.setThirdPersonView();
             break;
         case R.id.fire_button:
-            //System.out.println("fire object not yet implemented");
-            //fire_object()
-            double scaler = (double) mVelocityBar.getProgress() / 500;
-            Vector vector = new Vector(vx*scaler, vy*scaler, vz*scaler);
-
-            starSystem.addPlanet((int)(random()*Integer.MAX_VALUE), new Position(px, py, pz), vector);
-
+            synchronized (sharedLock) {
+                //System.out.println("fire object not yet implemented");
+                //fire_object()
+                double scaler = (double) mVelocityBar.getProgress() / 100;
+                //Vector vector = new Vector(vx*scaler, vy*scaler, vz*scaler);
+                Vector vector = new Vector(.08, 0, 0);
+//            Position position = new Position(px, py, pz);
+                Position position = new Position(0, 0, 1);
+                starSystem.addPlanet(mRenderer.createObjectTrajectory(), position, vector);
+            }
             break;
         case R.id.set_button:
             //System.out.println("set object not yet implemented");
@@ -457,12 +455,14 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     }
 
     private class StarSystemThread extends Thread {
-        private final StarSystem starSystem = new StarSystem();
+//        private final StarSystem starSystem = new StarSystem();
 
         public StarSystemThread() {
-            int trajectoryId = mRenderer.createObjectTrajectory();
+//            int trajectoryId = mRenderer.createObjectTrajectory();
             starSystem.addStar(new Position(0, 0, 0));
-            starSystem.addPlanet(trajectoryId, new Position(0, 0, 1), new Vector(0.08, 0, 0));
+//            starSystem.addPlanet(trajectoryId, new Position(0, 0, 1), new Vector(0.08, 0, 0));
+            int trajectoryId2 = mRenderer.createObjectTrajectory();
+            starSystem.addPlanet(trajectoryId2, new Position(1, 1, 0), new Vector(0, 0.08, 0));
         }
 
         @Override
