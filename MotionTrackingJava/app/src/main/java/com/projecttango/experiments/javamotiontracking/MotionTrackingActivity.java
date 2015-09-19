@@ -321,6 +321,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
 //            Position position = new Position(px, py, pz);
                 Position position = new Position(0, 0, 1);
                 starSystem.addPlanet(mRenderer.createObjectTrajectory(), position, vector);
+                Log.wtf("", "THIS IS OLVA'S FAULT");
             }
             break;
         case R.id.set_button:
