@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     private TextView mApplicationVersionTextView;
     private TextView mTangoEventTextView;
     private Button mMotionResetButton;
+    private SeekBar mVelocityBar;
     private float mPreviousTimeStamp;
     private int mPreviousPoseStatus;
     private int count;
@@ -75,6 +77,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     private boolean mIsProcessing = false;
     private TangoPoseData mPose;
     private static final int UPDATE_INTERVAL_MS = 100;
+    private StarSystem starSystem;
     public static Object sharedLock = new Object();
     private double x, y, z;
 
@@ -97,6 +100,10 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         findViewById(R.id.top_down_button).setOnClickListener(this);
         findViewById(R.id.fire_button).setOnClickListener(this);
         findViewById(R.id.set_button).setOnClickListener(this);
+
+
+        //Velocity slider
+        mVelocityBar = (SeekBar) findViewById(R.id.velocity_bar);
 
         // Button to reset motion tracking
         mMotionResetButton = (Button) findViewById(R.id.resetmotion);
@@ -146,6 +153,14 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
 
         // Display the library version for debug purposes
         mTangoServiceVersionTextView.setText(mConfig.getString("tango_service_library_version"));
+
+
+        starSystem = new StarSystem();
+
+        starSystem.addStar( new Position(0,0,0));
+        starSystem.addPlanet(27, new Position(10, 0, 0), new Vector(0, 10, 0));
+
+
         startUIThread();
         new StarSystemThread().start();
     }
@@ -291,6 +306,16 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         case R.id.fire_button:
             //System.out.println("fire object not yet implemented");
             //fire_object()
+            double scaler = (double) mVelocityBar.getProgress() /500;
+            Vector vector = new Vector(x/scaler, y/scaler, z/scaler);
+
+            starSystem.addPlanet(1, new Position(x, y, z), vector);
+
+
+
+
+
+
             break;
         case R.id.set_button:
             //System.out.println("set object not yet implemented");
