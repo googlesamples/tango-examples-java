@@ -15,7 +15,7 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <android.opengl.GLSurfaceView
         android:id="@+id/gl_surface_view"
@@ -169,6 +169,28 @@
         android:text="@string/first_person" />
 
     <Button
+        android:id="@+id/fire_button"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/resetmotion"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:paddingRight="5dp"
+        android:text="@string/fire_object" />
+
+    <Button
+        android:id="@+id/set_button"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fire_button"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:paddingRight="5dp"
+        android:text="@string/set_object" />
+
+    <Button
         android:id="@+id/top_down_button"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
@@ -198,5 +220,43 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="5dp"
         android:text="@string/resetmotiontracking" />
+
+    <TextView
+        android:id="@+id/velocity_bar_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="225dp"
+        android:text="Vel:" />
+
+    <SeekBar
+        android:id="@+id/velocity_bar"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="250dp"
+        android:max="100"/>
+
+
+    <TextView
+        android:id="@+id/pointcloud_bar_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="560dp"
+        android:text="Point:" />
+
+    <SeekBar
+        android:id="@+id/pointcloud_bar"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="600dp"
+        android:max="100"/>
+
 
 </RelativeLayout>

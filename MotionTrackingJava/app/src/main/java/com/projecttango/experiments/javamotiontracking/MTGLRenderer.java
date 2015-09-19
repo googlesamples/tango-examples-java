@@ -46,7 +46,7 @@ public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
     private Trajectory mTrajectory;
     private CameraFrustum mCameraFrustum;
     private CameraFrustumAndAxis mCameraFrustumAndAxis;
-    private Grid mFloorGrid;
+    private ColorGrid mFloorGrid;
     private boolean mIsValid = false;
     private List<Trajectory> mObjectTrajectories = new ArrayList<Trajectory>();
     private Object trajectoryLock = new Object();
@@ -55,12 +55,13 @@ public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
         // Set background color and enable depth testing
-        GLES20.glClearColor(1f, 1f, 1f, 1.0f);
+        //10,20,89
+        GLES20.glClearColor(0.0f, 0.0f, .41f, 1.0f);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
         // resetModelMatCalculator();
         mCameraFrustum = new CameraFrustum();
-        mFloorGrid = new Grid();
+        mFloorGrid = new ColorGrid();
         mCameraFrustumAndAxis = new CameraFrustumAndAxis();
         mTrajectory = new Trajectory(3);
 

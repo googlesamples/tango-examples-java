@@ -95,6 +95,8 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         findViewById(R.id.first_person_button).setOnClickListener(this);
         findViewById(R.id.third_person_button).setOnClickListener(this);
         findViewById(R.id.top_down_button).setOnClickListener(this);
+        findViewById(R.id.fire_button).setOnClickListener(this);
+        findViewById(R.id.set_button).setOnClickListener(this);
 
         // Button to reset motion tracking
         mMotionResetButton = (Button) findViewById(R.id.resetmotion);
@@ -145,6 +147,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         // Display the library version for debug purposes
         mTangoServiceVersionTextView.setText(mConfig.getString("tango_service_library_version"));
         startUIThread();
+        new StarSystemThread().start();
     }
 
     /**
@@ -185,7 +188,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
                     if (!mRenderer.isValid()) {
                         return;
                     }
-                    mRenderer.getTrajectory().updateTrajectory(translation);
+                    //mRenderer.getTrajectory().updateTrajectory(translation);
                     mRenderer.getModelMatCalculator().updateModelMatrix(translation,
                             pose.getRotationAsFloats());
 
@@ -276,21 +279,28 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.first_person_button:
-                mRenderer.setFirstPersonView();
-                break;
-            case R.id.top_down_button:
-                mRenderer.setTopDownView();
-                break;
-            case R.id.third_person_button:
-                mRenderer.setThirdPersonView();
-                break;
-            case R.id.resetmotion:
-                motionReset();
-                break;
-            default:
-                Log.w(TAG, "Unknown button click");
-                return;
+        case R.id.first_person_button:
+            mRenderer.setFirstPersonView();
+            break;
+        case R.id.top_down_button:
+            mRenderer.setTopDownView();
+            break;
+        case R.id.third_person_button:
+            mRenderer.setThirdPersonView();
+            break;
+        case R.id.fire_button:
+            //System.out.println("fire object not yet implemented");
+            //fire_object()
+            break;
+        case R.id.set_button:
+            //System.out.println("set object not yet implemented");
+            break;
+        case R.id.resetmotion:
+            motionReset();
+            break;
+        default:
+            Log.w(TAG, "Unknown button click");
+            return;
         }
     }
 
@@ -411,5 +421,36 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
 
         double euler[] = {heading, attitude, bank};
         return euler;
+    }
+
+    private class StarSystemThread extends Thread {
+        private final StarSystem starSystem = new StarSystem();
+
+        public StarSystemThread() {
+            int trajectoryId = mRenderer.createObjectTrajectory();
+            starSystem.addStar(new Position(0, 0, 0));
+            starSystem.addPlanet(trajectoryId, new Position(0, 0, 1), new Vector(0.08, 0, 0));
+        }
+
+        @Override
+        public void run() {
+            while (!isInterrupted()) {
+                starSystem.tick();
+                for (Mass planet : starSystem.getPlanets()) {
+                    if (mRenderer.isValid()) {
+                        mRenderer.getObjectTrajectory((int) planet.getId()).updateTrajectory(new float[]{
+                                (float) planet.getPosition().getX(),
+                                (float) planet.getPosition().getZ(),
+                                (float) planet.getPosition().getY()});
+                    }
+                }
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        }
     }
 }

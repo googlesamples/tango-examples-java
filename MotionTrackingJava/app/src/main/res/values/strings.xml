@@ -45,5 +45,6 @@
     <string name="pose_invalid">"invalid"</string>
     <string name="pose_unknown">"unknown"</string>
     <string name="latest_adf_is">", Latest ADF is: "</string>
-
+    <string name="fire_object">"Fire"</string>
+    <string name="set_object">"Set"</string>
 </resources>

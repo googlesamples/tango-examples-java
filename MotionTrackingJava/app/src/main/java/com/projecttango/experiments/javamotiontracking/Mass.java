@@ -4,14 +4,21 @@ package com.projecttango.experiments.javamotiontracking;
  * Created by tom on 9/19/15.
  */
 public class Mass {
-    private static final double GRAVITY = 1;
+    private static final double GRAVITY = 0.01;
+
+    private final long id;
 
     private Position position;
     private Vector velocity;
 
-    public Mass(Position position, Vector velocity) {
+    public Mass(long id, Position position, Vector velocity) {
+        this.id = id;
         this.position = position;
         this.velocity = velocity;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public Position getPosition() {
@@ -29,11 +36,11 @@ public class Mass {
     }
 
     public void move() {
-        position.move(velocity);
+        position = position.move(velocity);
     }
 
     @Override
     public String toString() {
-        return "Position=" + position + ", velocity=" + velocity;
+        return "ID=" + id + ", position=" + position + ", velocity=" + velocity;
     }
 }
