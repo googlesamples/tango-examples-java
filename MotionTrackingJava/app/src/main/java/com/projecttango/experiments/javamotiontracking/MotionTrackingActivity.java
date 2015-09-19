@@ -44,6 +44,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static java.lang.Math.cos;
+import static java.lang.Math.random;
 import static java.lang.Math.sin;
 
 /**
@@ -312,15 +313,10 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         case R.id.fire_button:
             //System.out.println("fire object not yet implemented");
             //fire_object()
-            double scaler = (double) mVelocityBar.getProgress() /500;
-            Vector vector = new Vector(x/scaler, y/scaler, z/scaler);
+            double scaler = (double) mVelocityBar.getProgress() / 500;
+            Vector vector = new Vector(vx*scaler, vy*scaler, vz*scaler);
 
-            starSystem.addPlanet(1, new Position(x, y, z), vector);
-
-
-
-
-
+            starSystem.addPlanet((int)(random()*Integer.MAX_VALUE), new Position(px, py, pz), vector);
 
             break;
         case R.id.set_button:
