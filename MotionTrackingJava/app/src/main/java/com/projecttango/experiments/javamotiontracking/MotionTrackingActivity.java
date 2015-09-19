@@ -76,7 +76,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     private TangoPoseData mPose;
     private static final int UPDATE_INTERVAL_MS = 100;
     public static Object sharedLock = new Object();
-    private double x, y, z;
+    private double vx, vy, vz, px, py, pz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,9 +201,15 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
                     double yaw = euler[0];
                     double pitch = euler[2];
 
-                    x = cos(yaw) * cos(pitch);
-                    y = sin(yaw) * cos(pitch);
-                    z = sin(pitch);
+                    vx = cos(yaw) * cos(pitch);
+                    vy = sin(yaw) * cos(pitch);
+                    vz = sin(pitch);
+
+                    final float[] pos = pose.getTranslationAsFloats();
+
+                    px = pos[0];
+                    py = pos[1];
+                    pz = pos[2];
                 }
             }
 
