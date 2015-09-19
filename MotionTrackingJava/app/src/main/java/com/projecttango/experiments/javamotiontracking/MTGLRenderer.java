@@ -55,7 +55,8 @@ public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
         // Set background color and enable depth testing
-        GLES20.glClearColor(1f, 1f, 1f, 1.0f);
+        //10,20,89
+        GLES20.glClearColor(0.0f, 0.0f, .41f, 1.0f);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
         // resetModelMatCalculator();
@@ -83,7 +84,8 @@ public class MTGLRenderer extends Renderer implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 gl) {
         synchronized (MotionTrackingActivity.sharedLock) {
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+//            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+            GLES20.glClearColor(0.0f, 0.0f, .1f, 1.0f);
             mTrajectory.draw(getViewMatrix(), mProjectionMatrix);
             mFloorGrid.draw(getViewMatrix(), mProjectionMatrix);
             mCameraFrustumAndAxis.draw(getViewMatrix(), mProjectionMatrix);
