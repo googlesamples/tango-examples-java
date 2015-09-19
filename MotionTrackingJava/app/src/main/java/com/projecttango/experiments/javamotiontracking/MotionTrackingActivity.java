@@ -91,6 +91,8 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         findViewById(R.id.first_person_button).setOnClickListener(this);
         findViewById(R.id.third_person_button).setOnClickListener(this);
         findViewById(R.id.top_down_button).setOnClickListener(this);
+        findViewById(R.id.fire_button).setOnClickListener(this);
+        findViewById(R.id.set_button).setOnClickListener(this);
 
         // Button to reset motion tracking
         mMotionResetButton = (Button) findViewById(R.id.resetmotion);
@@ -267,6 +269,13 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
             break;
         case R.id.third_person_button:
             mRenderer.setThirdPersonView();
+            break;
+        case R.id.fire_button:
+            //System.out.println("fire object not yet implemented");
+            //fire_object()
+            break;
+        case R.id.set_button:
+            //System.out.println("set object not yet implemented");
             break;
         case R.id.resetmotion:
             motionReset();
