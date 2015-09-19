@@ -221,6 +221,12 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
                     vy = sin(yaw) * cos(pitch);
                     vz = sin(pitch);
 
+                    double length = Math.sqrt(vx * vx + vy * vy + vz * vz);
+
+                    vx = vx / length;
+                    vy = vy / length;
+                    vz = vz / length;
+
                     final float[] pos = pose.getTranslationAsFloats();
 
                     px = pos[0];
