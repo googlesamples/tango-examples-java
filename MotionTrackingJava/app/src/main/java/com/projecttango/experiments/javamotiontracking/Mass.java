@@ -4,7 +4,7 @@ package com.projecttango.experiments.javamotiontracking;
  * Created by tom on 9/19/15.
  */
 public class Mass {
-    private static final double GRAVITY = 1;
+    private static final double GRAVITY = 0.01;
 
     private final long id;
 
