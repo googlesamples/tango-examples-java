@@ -40,7 +40,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.Arrays;
 
-import com.projecttango.experiments.javaarealearning.SetADFNameDialog.SetNameCommunicator;
 
 /**
  * This class lets you manage ADFs between this class's Application Package folder and API private
@@ -48,7 +47,7 @@ import com.projecttango.experiments.javaarealearning.SetADFNameDialog.SetNameCom
  * space to any known and accessible file path.
  * 
  */
-public class ADFUUIDListViewActivity extends Activity implements SetNameCommunicator {
+public class ADFUUIDListViewActivity extends Activity implements SetADFNameDialog.CallbackListener {
     private ADFDataSource mADFDataSource;
     private ListView mUUIDListView, mAppSpaceUUIDListView;
     ADFUUIDArrayAdapter mADFAdapter, mAppSpaceADFAdapter;
@@ -224,8 +223,11 @@ public class ADFUUIDListViewActivity extends Activity implements SetNameCommunic
         setADFNameDialog.show(manager, "ADFNameDialog");
     }
 
+    /**
+     * Implements SetADFNameDialog.CallbackListener.
+     */
     @Override
-    public void onSetName(String name, String uuid) {
+    public void onAdfNameOk(String name, String uuid) {
         TangoAreaDescriptionMetaData metadata = new TangoAreaDescriptionMetaData();
         metadata = mADFDataSource.getTango().loadAreaDescriptionMetaData(uuid);
         byte[] adfNameBytes = metadata.get("name");
@@ -238,6 +240,14 @@ public class ADFUUIDListViewActivity extends Activity implements SetNameCommunic
         mUUIDNames = mADFDataSource.getUUIDNames();
         mADFAdapter = new ADFUUIDArrayAdapter(this, mUUIDList, mUUIDNames);
         mUUIDListView.setAdapter(mADFAdapter);
+    }
+
+    /**
+     * Implements SetADFNameDialog.CallbackListener.
+     */
+    @Override
+    public void onAdfNameCancelled() {
+        // Nothing to do here.
     }
 }
 
