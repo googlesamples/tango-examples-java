@@ -16,16 +16,6 @@
 
 package com.projecttango.experiments.javamotiontracking;
 
-import com.google.atap.tangoservice.Tango;
-import com.google.atap.tangoservice.Tango.OnTangoUpdateListener;
-import com.google.atap.tangoservice.TangoConfig;
-import com.google.atap.tangoservice.TangoCoordinateFramePair;
-import com.google.atap.tangoservice.TangoErrorException;
-import com.google.atap.tangoservice.TangoEvent;
-import com.google.atap.tangoservice.TangoOutOfDateException;
-import com.google.atap.tangoservice.TangoPoseData;
-import com.google.atap.tangoservice.TangoXyzIjData;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -36,11 +26,25 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.atap.tangoservice.Tango;
+import com.google.atap.tangoservice.Tango.OnTangoUpdateListener;
+import com.google.atap.tangoservice.TangoConfig;
+import com.google.atap.tangoservice.TangoCoordinateFramePair;
+import com.google.atap.tangoservice.TangoErrorException;
+import com.google.atap.tangoservice.TangoEvent;
+import com.google.atap.tangoservice.TangoOutOfDateException;
+import com.google.atap.tangoservice.TangoPoseData;
+import com.google.atap.tangoservice.TangoXyzIjData;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 /**
  * Main Activity class for the Motion Tracking API Sample. Handles the connection to the Tango
@@ -62,6 +66,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     private TextView mApplicationVersionTextView;
     private TextView mTangoEventTextView;
     private Button mMotionResetButton;
+    private SeekBar mVelocityBar;
     private float mPreviousTimeStamp;
     private int mPreviousPoseStatus;
     private int count;
@@ -72,7 +77,9 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     private boolean mIsProcessing = false;
     private TangoPoseData mPose;
     private static final int UPDATE_INTERVAL_MS = 100;
+    private StarSystem starSystem;
     public static Object sharedLock = new Object();
+    private double vx, vy, vz, px, py, pz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +98,12 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         findViewById(R.id.first_person_button).setOnClickListener(this);
         findViewById(R.id.third_person_button).setOnClickListener(this);
         findViewById(R.id.top_down_button).setOnClickListener(this);
+        findViewById(R.id.fire_button).setOnClickListener(this);
+        findViewById(R.id.set_button).setOnClickListener(this);
+
+
+        //Velocity slider
+        mVelocityBar = (SeekBar) findViewById(R.id.velocity_bar);
 
         // Button to reset motion tracking
         mMotionResetButton = (Button) findViewById(R.id.resetmotion);
@@ -140,7 +153,12 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
 
         // Display the library version for debug purposes
         mTangoServiceVersionTextView.setText(mConfig.getString("tango_service_library_version"));
+
+        synchronized (sharedLock) {
+            starSystem = new StarSystem();
+        }
         startUIThread();
+        new StarSystemThread().start();
     }
 
     /**
@@ -178,12 +196,37 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
                     // Update the OpenGL renderable objects with the new Tango Pose
                     // data
                     float[] translation = pose.getTranslationAsFloats();
-                    if(!mRenderer.isValid()){
+                    if (!mRenderer.isValid()) {
                         return;
                     }
-                    mRenderer.getTrajectory().updateTrajectory(translation);
+                    //mRenderer.getTrajectory().updateTrajectory(translation);
                     mRenderer.getModelMatCalculator().updateModelMatrix(translation,
                             pose.getRotationAsFloats());
+
+                    final float[] rot = pose.getRotationAsFloats();
+
+                    final double[] euler = getEulerFromQuat(rot[0], rot[1], rot[2], rot[3]);
+
+//                    Log.d(TAG, " " + euler[0] + " " + euler[1] + " " + euler[2]);
+
+                    double yaw = euler[0];
+                    double pitch = euler[2];
+
+                    vx = cos(yaw) * cos(pitch);
+                    vy = sin(yaw) * cos(pitch);
+                    vz = sin(pitch);
+
+                    double length = Math.sqrt(vx * vx + vy * vy + vz * vz);
+
+                    vx = vx / length;
+                    vy = vy / length;
+                    vz = vz / length;
+
+                    final float[] pos = pose.getTranslationAsFloats();
+
+                    px = pos[0];
+                    py = pos[1];
+                    pz = pos[2];
                 }
             }
 
@@ -268,6 +311,22 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         case R.id.third_person_button:
             mRenderer.setThirdPersonView();
             break;
+        case R.id.fire_button:
+            synchronized (sharedLock) {
+                //System.out.println("fire object not yet implemented");
+                //fire_object()
+                double scaler = (double) mVelocityBar.getProgress() / 100;
+                //Vector vector = new Vector(vx*scaler, vy*scaler, vz*scaler);
+                Vector vector = new Vector(.08, 0, 0);
+//            Position position = new Position(px, py, pz);
+                Position position = new Position(0, 0, 1);
+                starSystem.addPlanet(mRenderer.createObjectTrajectory(), position, vector);
+                Log.wtf("", "THIS IS OLVA'S FAULT");
+            }
+            break;
+        case R.id.set_button:
+            //System.out.println("set object not yet implemented");
+            break;
         case R.id.resetmotion:
             motionReset();
             break;
@@ -281,7 +340,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     public boolean onTouchEvent(MotionEvent event) {
         return mRenderer.onTouchEvent(event);
     }
-    
+
     /**
      * Setup the extrinsics of the device.
      */
@@ -304,6 +363,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
         mRenderer.getModelMatCalculator().SetColorCamera2IMUMatrix(
                 color2IMUPose.getTranslationAsFloats(), color2IMUPose.getRotationAsFloats());
     }
+
     /**
      * Create a separate thread to update Log information on UI at the specified
      * interval of UPDATE_INTERVAL_MS. This function also makes sure to have access
@@ -312,6 +372,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
     private void startUIThread() {
         new Thread(new Runnable() {
             DecimalFormat threeDec = new DecimalFormat("00.000");
+
             @Override
             public void run() {
                 while (true) {
@@ -325,7 +386,7 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
                                         if (mPose == null) {
                                             return;
                                         }
-                                       
+
                                         String translationString = "["
                                                 + threeDec.format(mPose.translation[0]) + ", "
                                                 + threeDec.format(mPose.translation[1]) + ", "
@@ -363,5 +424,67 @@ public class MotionTrackingActivity extends Activity implements View.OnClickList
                 }
             }
         }).start();
+    }
+
+
+    static double[] getEulerFromQuat(float x, float y, float z, float w) {
+        double limit = 0.499999;
+        double sqx = x * x;
+        double sqy = y * y;
+        double sqz = z * z;
+        double t = x * y + z * w;
+
+        double heading, attitude, bank;
+
+        if (t > limit) // gimbal lock ?
+        {
+            heading = 2 * Math.atan2(x, w);
+            attitude = Math.PI / 2;
+            bank = 0;
+        } else if (t < -limit) {
+            heading = -2 * Math.atan2(x, w);
+            attitude = -Math.PI / 2;
+            bank = 0;
+        } else {
+            heading = Math.atan2(2 * y * w - 2 * x * z, 1 - 2 * sqy - 2 * sqz);
+            attitude = Math.asin(2 * t);
+            bank = Math.atan2(2 * x * w - 2 * y * z, 1 - 2 * sqx - 2 * sqz);
+        }
+
+        double euler[] = {heading, attitude, bank};
+        return euler;
+    }
+
+    private class StarSystemThread extends Thread {
+//        private final StarSystem starSystem = new StarSystem();
+
+        public StarSystemThread() {
+//            int trajectoryId = mRenderer.createObjectTrajectory();
+            starSystem.addStar(new Position(0, 0, 0));
+//            starSystem.addPlanet(trajectoryId, new Position(0, 0, 1), new Vector(0.08, 0, 0));
+            int trajectoryId2 = mRenderer.createObjectTrajectory();
+            starSystem.addPlanet(trajectoryId2, new Position(1, 1, 0), new Vector(0, 0.08, 0));
+        }
+
+        @Override
+        public void run() {
+            while (!isInterrupted()) {
+                starSystem.tick();
+                for (Mass planet : starSystem.getPlanets()) {
+                    if (mRenderer.isValid()) {
+                        mRenderer.getObjectTrajectory((int) planet.getId()).updateTrajectory(new float[]{
+                                (float) planet.getPosition().getX(),
+                                (float) planet.getPosition().getZ(),
+                                (float) planet.getPosition().getY()});
+                    }
+                }
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        }
     }
 }
