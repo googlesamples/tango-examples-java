@@ -25,7 +25,7 @@ import com.google.atap.tangoservice.TangoErrorException;
 import com.google.atap.tangoservice.TangoInvalidException;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.projecttango.rajawali.Pose;
-import com.projecttango.rajawali.ScenePoseCalcuator;
+import com.projecttango.rajawali.ScenePoseCalculator;
 
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.textures.ATexture;
@@ -75,11 +75,11 @@ public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
     private ScreenQuad mBackgroundQuad;
     private boolean mIsCameraConfigured = false;
 
-    protected ScenePoseCalcuator mScenePoseCalcuator;
+    protected ScenePoseCalculator mScenePoseCalculator;
 
     public TangoRajawaliRenderer(Context context) {
         super(context);
-        mScenePoseCalcuator = new ScenePoseCalcuator();
+        mScenePoseCalculator = new ScenePoseCalculator();
     }
 
     /**
@@ -131,7 +131,7 @@ public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
                         if (lastFramePose.statusCode != TangoPoseData.POSE_VALID) {
                             lastFramePose = mTango.getPoseAtTime(0, TANGO_WORLD_T_DEVICE);
                         } else {
-                            Pose sceneCameraPose = mScenePoseCalcuator.toOpenGLCameraPose(lastFramePose);
+                            Pose sceneCameraPose = mScenePoseCalculator.toOpenGLCameraPose(lastFramePose);
                             updateCameraPose(sceneCameraPose);
                             mLastSceneCameraFrameTimestamp = mLastRGBFrameTimestamp;
                         }
@@ -221,7 +221,7 @@ public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
 
         // Configure the Rajawali Scene camera projection to match the Tango camera intrinsic
         TangoCameraIntrinsics intrinsics = mTango.getCameraIntrinsics(mCameraId);
-        Matrix4 projectionMatrix = mScenePoseCalcuator.calculateProjectionMatrix(
+        Matrix4 projectionMatrix = mScenePoseCalculator.calculateProjectionMatrix(
                 intrinsics.width, intrinsics.height, intrinsics.fx, intrinsics.fy, intrinsics.cx,
                 intrinsics.cy);
         getCurrentCamera().setProjectionMatrix(projectionMatrix);
@@ -232,7 +232,7 @@ public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
      */
     public void setupExtrinsics(TangoPoseData imuTDevicePose, TangoPoseData imuTColorCameraPose,
                                  TangoPoseData imuTDepthCameraPose) {
-        mScenePoseCalcuator.setupExtrinsics(imuTDevicePose, imuTColorCameraPose, imuTDepthCameraPose);
+        mScenePoseCalculator.setupExtrinsics(imuTDevicePose, imuTColorCameraPose, imuTDepthCameraPose);
     }
 
     /**

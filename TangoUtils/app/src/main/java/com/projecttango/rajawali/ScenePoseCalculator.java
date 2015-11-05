@@ -15,10 +15,6 @@
  */
 package com.projecttango.rajawali;
 
-import android.util.Log;
-
-import com.google.atap.tangoservice.Tango;
-import com.google.atap.tangoservice.TangoCoordinateFramePair;
 import com.google.atap.tangoservice.TangoPoseData;
 
 import org.rajawali3d.math.Matrix;
@@ -33,8 +29,8 @@ import org.rajawali3d.math.vector.Vector3;
  * to first call <code>setupExtrinsics</code>. The recommended time to do this is right after
  * the Tango service is connected.
  */
-public class ScenePoseCalcuator {
-    private static final String TAG = ScenePoseCalcuator.class.getSimpleName();
+public class ScenePoseCalculator {
+    private static final String TAG = ScenePoseCalculator.class.getSimpleName();
 
     // Transformation from the Tango Area Description or Start of Service coordinate frames
     // to the OpenGL coordinate frame
@@ -228,9 +224,9 @@ public class ScenePoseCalcuator {
      */
     public void setupExtrinsics(TangoPoseData imuTDevicePose, TangoPoseData imuTColorCameraPose,
                                 TangoPoseData imuTDepthCameraPose) {
-        Matrix4 deviceTImu = ScenePoseCalcuator.tangoPoseToMatrix(imuTDevicePose).inverse();
-        Matrix4 imutColorCamera = ScenePoseCalcuator.tangoPoseToMatrix(imuTColorCameraPose);
-        Matrix4 imuTDepthCamera = ScenePoseCalcuator.tangoPoseToMatrix(imuTDepthCameraPose);
+        Matrix4 deviceTImu = ScenePoseCalculator.tangoPoseToMatrix(imuTDevicePose).inverse();
+        Matrix4 imutColorCamera = ScenePoseCalculator.tangoPoseToMatrix(imuTColorCameraPose);
+        Matrix4 imuTDepthCamera = ScenePoseCalculator.tangoPoseToMatrix(imuTDepthCameraPose);
         mDeviceTDepthCamera = deviceTImu.clone().multiply(imuTDepthCamera);
         mDeviceTColorCamera = deviceTImu.multiply(imutColorCamera);
     }
