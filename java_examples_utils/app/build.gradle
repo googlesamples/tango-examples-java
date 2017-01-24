@@ -1,12 +1,18 @@
 apply plugin: 'com.android.library'
 
+ext {
+    compileSdk = project.hasProperty("defaultCompileSdkVersion") ? defaultCompileSdkVersion : 19
+    buildTools = project.hasProperty("defaultBuildToolsVersion") ? defaultBuildToolsVersion : "25.0.2"
+    targetSdk = project.hasProperty("defaultTargetSdkVersion") ? defaultTargetSdkVersion : 19
+}
+
 android {
-    compileSdkVersion 19
-    buildToolsVersion "21.1.2"
+    compileSdkVersion compileSdk
+    buildToolsVersion buildTools
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 19
+        targetSdkVersion targetSdk
     }
 
     buildTypes {

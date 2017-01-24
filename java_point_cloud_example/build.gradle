@@ -12,6 +12,13 @@ buildscript {
     }
 }
 
+ext {
+    defaultCompileSdkVersion = 24
+    defaultMinSdkVersion = 19
+    defaultTargetSdkVersion = 19
+    defaultBuildToolsVersion = "25.0.2"
+}
+
 allprojects {
     repositories {
         mavenLocal()
