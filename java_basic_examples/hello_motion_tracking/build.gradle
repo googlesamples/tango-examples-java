@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "21.1.2"
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
 
     defaultConfig {
         applicationId "com.projecttango.examples.java.hellomotiontracking"
         minSdkVersion 19
-        targetSdkVersion 23
+        targetSdkVersion project.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
@@ -37,6 +37,6 @@ if (project.hasProperty("Tango.catkin_devel_prefix")) {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.0'
     compile fileTree(dir: external_lib_prefix + '/jar', include: ['**/*.jar'])
 }

@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "21.1.2"
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
 
     defaultConfig {
         applicationId "com.projecttango.examples.java.hellovideo"
         minSdkVersion 19
-        targetSdkVersion 19
+        targetSdkVersion project.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
