@@ -15,26 +15,24 @@
  */
 package com.projecttango.examples.java.pointcloud;
 
-import com.google.atap.tangoservice.TangoPointCloudData;
-import com.google.atap.tangoservice.TangoPoseData;
-import com.google.atap.tangoservice.TangoXyzIjData;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.MotionEvent;
 
-import org.rajawali3d.math.Matrix4;
-import org.rajawali3d.math.Quaternion;
-import org.rajawali3d.math.vector.Vector3;
-import org.rajawali3d.renderer.RajawaliRenderer;
-
+import com.google.atap.tangoservice.TangoPointCloudData;
+import com.google.atap.tangoservice.TangoPoseData;
 import com.projecttango.examples.java.pointcloud.rajawali.FrustumAxes;
 import com.projecttango.examples.java.pointcloud.rajawali.Grid;
 import com.projecttango.examples.java.pointcloud.rajawali.PointCloud;
+
+import org.rajawali3d.math.Matrix4;
+import org.rajawali3d.math.Quaternion;
+import org.rajawali3d.math.vector.Vector3;
+import org.rajawali3d.renderer.Renderer;
 /**
  * Renderer for Point Cloud data.
  */
-public class PointCloudRajawaliRenderer extends RajawaliRenderer {
+public class PointCloudRajawaliRenderer extends Renderer {
 
     private static final float CAMERA_NEAR = 0.01f;
     private static final float CAMERA_FAR = 200f;
