@@ -36,7 +36,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.rajawali3d.scene.ASceneFrameCallback;
-import org.rajawali3d.surface.RajawaliSurfaceView;
+import org.rajawali3d.view.SurfaceView;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -52,7 +52,7 @@ public class MotionTrackingActivity extends Activity {
 
     private static final String TAG = MotionTrackingActivity.class.getSimpleName();
 
-    private RajawaliSurfaceView mSurfaceView;
+    private SurfaceView mSurfaceView;
     private MotionTrackingRajawaliRenderer mRenderer;
     private Tango mTango;
     private TangoConfig mConfig;
@@ -66,7 +66,7 @@ public class MotionTrackingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_motion_tracking);
         // OpenGL view where all of the graphics are drawn.
-        mSurfaceView = (RajawaliSurfaceView) findViewById(R.id.gl_surface_view);
+        mSurfaceView = (SurfaceView) findViewById(R.id.gl_surface_view);
         mRenderer = new MotionTrackingRajawaliRenderer(this);
 
         // Get current display orientation. Note that each time display orientation
