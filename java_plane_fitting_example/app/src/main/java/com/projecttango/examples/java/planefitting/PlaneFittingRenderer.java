@@ -15,14 +15,12 @@
  */
 package com.projecttango.examples.java.planefitting;
 
-import com.google.atap.tangoservice.TangoCameraIntrinsics;
-import com.google.atap.tangoservice.TangoPoseData;
-
 import android.content.Context;
-
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.Surface;
+
+import com.google.atap.tangoservice.TangoPoseData;
+import com.projecttango.tangosupport.TangoSupport;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
@@ -39,15 +37,15 @@ import org.rajawali3d.renderer.Renderer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.projecttango.tangosupport.TangoSupport;
-
 /**
  * Very simple example augmented reality renderer which displays a cube fixed in place.
  * The position of the cube in the OpenGL world is updated using the {@code updateObjectPose}
  * method.
  */
 public class PlaneFittingRenderer extends Renderer {
-    private static final float CUBE_SIDE_LENGTH = 0.5f;
+
+    private static final float CUBE_SIDE_LENGTH = 0.25f;
+
     private static final String TAG = PlaneFittingRenderer.class.getSimpleName();
 
     private float[] textureCoords0 = new float[]{0.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, 0.0F};

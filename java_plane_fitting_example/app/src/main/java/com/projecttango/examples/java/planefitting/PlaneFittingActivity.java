@@ -16,6 +16,22 @@
 
 package com.projecttango.examples.java.planefitting;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.hardware.display.DisplayManager;
+import android.opengl.Matrix;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.Display;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
+
 import com.google.atap.tangoservice.Tango;
 import com.google.atap.tangoservice.Tango.OnTangoUpdateListener;
 import com.google.atap.tangoservice.TangoCameraIntrinsics;
@@ -29,33 +45,15 @@ import com.google.atap.tangoservice.TangoOutOfDateException;
 import com.google.atap.tangoservice.TangoPointCloudData;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.google.atap.tangoservice.TangoXyzIjData;
-
-import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.hardware.Camera;
-import android.hardware.display.DisplayManager;
-import android.opengl.Matrix;
-import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.Display;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Toast;
+import com.projecttango.tangosupport.TangoPointCloudManager;
+import com.projecttango.tangosupport.TangoSupport;
+import com.projecttango.tangosupport.TangoSupport.IntersectionPointPlaneModelPair;
 
 import org.rajawali3d.scene.ASceneFrameCallback;
 import org.rajawali3d.view.SurfaceView;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.projecttango.tangosupport.TangoPointCloudManager;
-import com.projecttango.tangosupport.TangoSupport;
-import com.projecttango.tangosupport.TangoSupport.IntersectionPointPlaneModelPair;
 
 /**
  * An example showing how to use the Tango APIs to create an augmented reality application
@@ -104,12 +102,13 @@ public class PlaneFittingActivity extends Activity implements View.OnTouchListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSurfaceView = new SurfaceView(this);
+        setContentView(R.layout.activity_main);
+
+        mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
         mRenderer = new PlaneFittingRenderer(this);
         mSurfaceView.setSurfaceRenderer(mRenderer);
         mSurfaceView.setOnTouchListener(this);
         mPointCloudManager = new TangoPointCloudManager();
-        setContentView(mSurfaceView);
 
         DisplayManager displayManager = (DisplayManager) getSystemService(DISPLAY_SERVICE);
         if (displayManager != null) {
@@ -235,15 +234,12 @@ public class PlaneFittingActivity extends Activity implements View.OnTouchListen
     private void startupTango() {
         // No need to add any coordinate frame pairs since we are not
         // using pose data. So just initialize.
-        ArrayList<TangoCoordinateFramePair> framePairs = new ArrayList<TangoCoordinateFramePair>();
-        mTango.connectListener(framePairs, new OnTangoUpdateListener() {
-            @Override
-            public void onPoseAvailable(TangoPoseData pose) {
-                // We are not using OnPoseAvailable for this app.
-            }
+        ArrayList<TangoCoordinateFramePair> framePairs = new ArrayList<>();
 
+        mTango.connectListener(framePairs, new Tango.TangoUpdateCallback() {
             @Override
             public void onFrameAvailable(int cameraId) {
+                super.onFrameAvailable(cameraId);
                 // Check if the frame available is for the camera we want and update its frame
                 // on the view.
                 if (cameraId == TangoCameraIntrinsics.TANGO_CAMERA_COLOR) {
@@ -254,21 +250,13 @@ public class PlaneFittingActivity extends Activity implements View.OnTouchListen
             }
 
             @Override
-            public void onXyzIjAvailable(TangoXyzIjData xyzIj) {
-                // We are not using onXyzIjAvailable for this app.
-            }
-
-            @Override
             public void onPointCloudAvailable(TangoPointCloudData pointCloud) {
+                super.onPointCloudAvailable(pointCloud);
                 // Save the cloud and point data for later use.
                 mPointCloudManager.updatePointCloud(pointCloud);
             }
-
-            @Override
-            public void onTangoEvent(TangoEvent event) {
-                // We are not using OnPoseAvailable for this app.
-            }
         });
+
     }
 
     /**
