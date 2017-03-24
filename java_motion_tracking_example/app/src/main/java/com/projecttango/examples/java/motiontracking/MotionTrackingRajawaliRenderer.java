@@ -33,12 +33,12 @@ import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.Plane;
-import org.rajawali3d.renderer.RajawaliRenderer;
+import org.rajawali3d.renderer.Renderer;
 
 /**
  * This class implements the rendering logic for the Motion Tracking application using Rajawali.
  */
-public class MotionTrackingRajawaliRenderer extends RajawaliRenderer {
+public class MotionTrackingRajawaliRenderer extends Renderer {
     private static final String TAG = MotionTrackingRajawaliRenderer.class.getSimpleName();
 
     private static final float CAMERA_NEAR = 0.01f;

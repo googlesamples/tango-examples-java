@@ -13,14 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
-    <org.rajawali3d.surface.RajawaliSurfaceView
+    <org.rajawali3d.view.SurfaceView
         android:id="@+id/gl_surface_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_gravity="top" />
+        android:layout_height="fill_parent" />
 
-</RelativeLayout>
+</FrameLayout>

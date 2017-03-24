@@ -37,7 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.rajawali3d.scene.ASceneFrameCallback;
-import org.rajawali3d.surface.RajawaliSurfaceView;
+import org.rajawali3d.view.SurfaceView;
 
 import java.nio.FloatBuffer;
 import java.text.DecimalFormat;
@@ -70,7 +70,7 @@ public class PointCloudActivity extends Activity {
 
     private TangoPointCloudManager mPointCloudManager;
     private PointCloudRajawaliRenderer mRenderer;
-    private RajawaliSurfaceView mSurfaceView;
+    private SurfaceView mSurfaceView;
     private TextView mPointCountTextView;
 
     private TextView mAverageZTextView;
@@ -89,7 +89,7 @@ public class PointCloudActivity extends Activity {
 
         mPointCountTextView = (TextView) findViewById(R.id.point_count_textview);
         mAverageZTextView = (TextView) findViewById(R.id.average_z_textview);
-        mSurfaceView = (RajawaliSurfaceView) findViewById(R.id.gl_surface_view);
+        mSurfaceView = (SurfaceView) findViewById(R.id.gl_surface_view);
 
         mPointCloudManager = new TangoPointCloudManager();
         mTangoUx = setupTangoUxAndLayout();
