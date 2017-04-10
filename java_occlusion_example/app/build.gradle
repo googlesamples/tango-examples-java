@@ -40,7 +40,7 @@ repositories {
 
 dependencies {
     compile 'org.rajawali3d:rajawali:1.1.777@aar'
-    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile (name: 'tango_support_java_lib', ext: 'aar')
     compile fileTree(dir: external_lib_prefix + '/jar', include: ['**/*.jar'])
 }
